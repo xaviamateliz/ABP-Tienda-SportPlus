@@ -10,7 +10,7 @@ from app.controllers.pedido_controller import pedido_controller
 app = Flask(__name__)
 
 # Conectamos la bd con nuestra app.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/tienda_abp'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@192.168.125.10/sportplus'
 # Desactivamos un sistema de notificaciones interno de SQLAlchemy que no necesitamos y consume recursos.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
