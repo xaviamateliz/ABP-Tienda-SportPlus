@@ -276,4 +276,59 @@ paths:
           description: Información del pedido y sus productos asociada
         '404':
           description: El pedido consultado no existe
-          
+  /api/roles:
+    get:
+      tags:
+        - Roles
+      summary: Obtener lista completa de roles
+      responses:
+        '200':
+          description: Lista de roles recuperada
+    post:
+      tags:
+        - Roles
+      summary: Crear un nuevo rol
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+      responses:
+        '201':
+          description: Rol creado correctamente
+
+  /api/roles/{id}:
+    get:
+      tags:
+        - Roles
+      summary: Obtener los detalles de un rol por su ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Datos del rol encontrados
+        '404':
+          description: El rol solicitado no existe
+    delete:
+      tags:
+        - Roles
+      summary: Eliminar un rol del sistema
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Rol eliminado con éxito
+        '404':
+          description: El rol no existe
