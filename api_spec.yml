@@ -284,6 +284,31 @@ paths:
           description: Información del pedido y sus productos asociada
         '404':
           description: El pedido consultado no existe
+    put:
+      tags:
+        - Pedidos
+      summary: Actualizar el estado de un pedido específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado_pedido:
+                  type: boolean
+      responses:
+        '200':
+          description: Estado del pedido actualizado correctamente
+        '404':
+          description: El pedido solicitado no existe
+
   /api/roles:
     get:
       tags:
