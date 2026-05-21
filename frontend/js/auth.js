@@ -1,17 +1,17 @@
 // ============================================
 // AUTH — SPORT PLUS
 // Funciones de autenticación: login, registro, logout
-// Se conectará a Flask API: http://192.168.125.20:5000/api
+// Se conectará a Flask API: https://divisive-utopia-lilly.ngrok-free.dev/api
 // ============================================
 
 // ——— LOGIN ———
 // Envía email y contraseña a la API y guarda el token si es correcto
 async function login(email, password) {
     if (MOCK_MODE) {
-        // En modo mock simulamos que cualquier login es correcto
+        const esAdmin = email === "adminadmin@gmail.com" && password === "Admin123";
         localStorage.setItem("token", "mock-token-123");
-        localStorage.setItem("rol", "USER");
-        localStorage.setItem("nombre", email.split("@")[0]); // guardamos el nombre antes del @
+        localStorage.setItem("rol", esAdmin ? "ADMIN" : "USER");
+        localStorage.setItem("nombre", esAdmin ? "Admin" : email.split("@")[0]);
         return { ok: true };
     }
 
