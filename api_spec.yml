@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: API Tienda de Camisetas - ABP
+  title: API Tienda de Productos - ABP
   version: 1.0.0
-  description: Especificación completa de rutas para el MVP de la tienda de camisetas.
+  description: Especificación completa de rutas para el MVP de la tienda de productos.
 paths:
   /api/auth/login:
     post:
@@ -119,6 +119,9 @@ paths:
                   type: integer
                 categoria_id:
                   type: integer
+                url_producto:
+                  type: string
+                  format: uri
       responses:
         '201':
           description: Producto añadido con éxito
@@ -129,7 +132,7 @@ paths:
     get:
       tags:
         - Productos
-      summary: Obtener la información de una camiseta específica
+      summary: Obtener la información de un producto específico
       parameters:
         - name: id
           in: path
@@ -168,6 +171,9 @@ paths:
                   type: integer
                 categoria_id:
                   type: integer
+                url_producto:
+                  type: string
+                  format: uri
       responses:
         '200':
           description: Producto actualizado correctamente
@@ -243,6 +249,8 @@ paths:
                   type: string
                 codigo_postal_envio:
                   type: string
+                estado_pedido:
+                  type: boolean
                 lineas:
                   type: array
                   items:
