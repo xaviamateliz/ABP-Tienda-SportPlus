@@ -30,7 +30,7 @@ class Producto(db.Model):
     precio = db.Column(db.Numeric(18, 2), nullable=False)
     stock = db.Column(db.SmallInteger, nullable=False)
     categoria_id = db.Column(db.SmallInteger, db.ForeignKey('categorias.categoria_id', ondelete='NO ACTION', onupdate='NO ACTION'), nullable=False)
-
+    url_producto = db.Column(db.String(255), nullable=False)
     lineas_pedido = db.relationship('LineaPedido', backref='producto', lazy=True)
 
 class Usuario(db.Model):
@@ -63,6 +63,7 @@ class Pedido(db.Model):
     poblacion_envio = db.Column(db.String(20), nullable=False)
     provincia_envio = db.Column(db.String(20), nullable=False)
     codigo_postal_envio = db.Column(db.String(10), nullable=False)
+    estado_pagado = db.Column(db.Boolean, nullable=False)
 
     lineas_pedido = db.relationship('LineaPedido', backref='pedido', lazy=True)
 
@@ -73,4 +74,4 @@ class LineaPedido(db.Model):
     pedido_id = db.Column(db.SmallInteger, db.ForeignKey('pedidos.pedido_id', ondelete='NO ACTION', onupdate='NO ACTION'), primary_key=True)
     cantidad = db.Column(db.SmallInteger, nullable=False)
     lineas_pedido_id = db.Column(db.SmallInteger, nullable=False)
-    precio_unitario = db.Column(db.Numeric(18, 2), nullable=False)
+    precio_linea_pedido = db.Column(db.Numeric(18, 2), nullable=False)

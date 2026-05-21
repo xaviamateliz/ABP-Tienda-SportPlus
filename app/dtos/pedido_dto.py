@@ -5,7 +5,7 @@ class LineaPedidoDTO:
         return {
             "lineas_pedido_id": linea.lineas_pedido_id,
             "cantidad": linea.cantidad,
-            "precio_unitario": float(linea.precio_unitario),
+            "precio_linea_producto": float(linea.precio_unitario),
             "producto": ProductoDTO.to_json(linea.producto) if linea.producto else None
         }
 
@@ -13,7 +13,7 @@ class LineaPedidoDTO:
         return {
             "producto_id": json_data.get("producto_id"),
             "cantidad": json_data.get("cantidad"),
-            "precio_unitario": json_data.get("precio_unitario")
+            "precio_linea_producto": json_data.get("precio_unitario")
         }
 
 class PedidoDTO:
