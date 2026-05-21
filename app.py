@@ -12,10 +12,11 @@ from app.config import Config
 
 # La variable app contendrá toda la lógica, configuraciones y control.
 app = Flask(__name__)
+
+CORS(app)
 # Carga de manera masiva todas las variables definidas dentro de la clase Config directamente en el diccionario interno de configuraciones de Flask.
 app.config.from_object(Config)
 
-CORS(app, resources={r"/api/*": {"origins": app.config['ALLOWED_ORIGINS']}})
 
 # Conectamos el swagger con la explicación + ejemplos de todos los endpoints.
 app.config['SWAGGER'] = {

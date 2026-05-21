@@ -6,3 +6,6 @@ __pycache__/
 .env
 instance/
 .vscode/
+node_modules/
+playwright-report/
+test-results/

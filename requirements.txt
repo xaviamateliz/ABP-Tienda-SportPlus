@@ -4,3 +4,5 @@ PyMySQL==1.1.1
 flasgger==0.9.7.1
 PyYAML==6.0.1
 Flask-CORS==5.0.0
+pytest
+pytest-mock
