@@ -27,5 +27,6 @@ class PedidoDTO:
             "poblacion_envio": pedido.poblacion_envio,
             "provincia_envio": pedido.provincia_envio,
             "codigo_postal_envio": pedido.codigo_postal_envio,
-            "lineas": [LineaPedidoDTO.to_json(l) for l in pedido.lineas_pedido]
+            "lineas": [LineaPedidoDTO.to_json(l) for l in pedido.lineas_pedido],
+            "estado_pedido":pedido.estado_pedido
         }
