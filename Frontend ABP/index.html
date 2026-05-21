@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sport Plus — Ropa Deportiva</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    /* ——— HERO ——— */
+    .hero {
+      min-height: 100vh;
+      padding-top: 72px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5rem 4rem 5rem 5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-eyebrow-line {
+      width: 40px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .hero-eyebrow span {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .hero-title { margin-bottom: 1.5rem; }
+    .hero-title em { color: var(--accent); font-style: normal; display: block; }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3.5rem; }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Hero derecha — visual */
+    .hero-right {
+      background: var(--surface);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(255,61,0,0.12) 0%, transparent 65%);
+    }
+
+    .hero-big-emoji {
+      font-size: 16rem;
+      z-index: 1;
+      animation: float 5s ease-in-out infinite;
+      user-select: none;
+    }
+
+    .hero-tag {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 2rem;
+      background: rgba(8,8,8,0.9);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1rem 1.4rem;
+      z-index: 2;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-tag p { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 0.3rem; }
+    .hero-tag strong { font-family: var(--font-display); font-size: 1rem; color: var(--white); }
+    .hero-tag-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #44ff88; margin-right: 0.4rem; animation: pulse 1.5s infinite; }
+
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ——— DEPORTES / CATEGORÍAS ——— */
+    .sports-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0;
+    }
+
+    .sports-scroll {
+      display: flex;
+      gap: 0.6rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .sports-scroll::-webkit-scrollbar { display: none; }
+
+    .sport-chip {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.3rem;
+      border: 1px solid var(--border-light);
+      border-radius: 100px;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+      color: var(--muted);
+      background: transparent;
+    }
+    .sport-chip:hover, .sport-chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--white);
+    }
+
+    /* ——— CATEGORÍAS VISUALES ——— */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 300px 300px;
+      gap: 1rem;
+    }
+
+    .cat-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      transition: border-color var(--transition);
+    }
+    .cat-card:hover { border-color: var(--border-light); }
+    .cat-card:hover .cat-emoji { transform: scale(1.1); }
+
+    .cat-card-large { grid-row: span 2; }
+
+    .cat-emoji {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -60%);
+      font-size: 5rem;
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+    .cat-card-large .cat-emoji { font-size: 9rem; transform: translate(-50%, -55%); }
+    .cat-card:hover.cat-card-large .cat-emoji { transform: translate(-50%, -55%) scale(1.05); }
+
+    .cat-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.8) 0%, transparent 60%);
+    }
+
+    .cat-info { position: relative; z-index: 1; }
+    .cat-label {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--white);
+      display: block;
+    }
+    .cat-card-large .cat-label { font-size: 2.5rem; }
+    .cat-count { font-size: 0.8rem; color: var(--muted); }
+
+    /* ——— BANNER PROMO ——— */
+    .promo-strip {
+      background: var(--accent);
+      padding: 3.5rem 5rem;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      position: relative;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+    .promo-strip::after {
+      content: '+';
+      position: absolute;
+      right: -1rem;
+      top: -2rem;
+      font-family: var(--font-display);
+      font-size: 20rem;
+      font-weight: 900;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .promo-strip h2 { color: #000; }
+    .promo-strip p { color: rgba(0,0,0,0.6); margin-top: 0.4rem; font-size: 1rem; }
+
+    .btn-black { background: #000; color: var(--white); flex-shrink: 0; }
+    .btn-black:hover { background: #1a1a1a; transform: translateY(-2px); }
+
+    /* ——— RESPONSIVE ——— */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { height: 45vh; }
+      .hero-left { padding: 3rem 1.5rem; }
+      .categories-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .cat-card-large { grid-row: span 1; }
+      .promo-strip { flex-direction: column; padding: 2rem 1.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">Sport<span>+</span></a>
+
+    <ul class="navbar-links">
+      <li><a href="pages/catalogo.html">Catálogo</a></li>
+      <li><a href="#">Fútbol</a></li>
+      <li><a href="#">Running</a></li>
+      <li><a href="#">Gym</a></li>
+      <li><a href="#">Baloncesto</a></li>
+      <li><a href="#">Ofertas</a></li>
+    </ul>
+
+    <div class="navbar-actions">
+      <div id="nav-user"></div>
+      <a href="pages/carrito.html" class="navbar-icon-btn">
+        🛒 <span>Carrito</span>
+        <span class="cart-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line"></div>
+        <span>Nueva temporada 2025 / 2026</span>
+      </div>
+
+      <h1 class="hero-title">
+        Rinde<br>al<br><em>máximo</em>
+      </h1>
+
+      <p class="hero-desc">
+        Equipación técnica para todos los deportes. Desde el campo hasta el gimnasio, 
+        Sport Plus tiene lo que necesitas para rendir al máximo nivel.
+      </p>
+
+      <div class="hero-cta">
+        <a href="pages/catalogo.html" class="btn btn-primary">Ver colección</a>
+        <a href="pages/registro.html" class="btn btn-outline">Crear cuenta</a>
+      </div>
+
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">+500</div>
+          <div class="stat-label">Productos</div>
+        </div>
+        <div>
+          <div class="stat-num">12</div>
+          <div class="stat-label">Deportes</div>
+        </div>
+        <div>
+          <div class="stat-num">24h</div>
+          <div class="stat-label">Envío express</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-big-emoji">🏃</div>
+      <div class="hero-tag">
+        <p><span class="hero-tag-dot"></span>Más vendido ahora</p>
+        <strong>Camiseta Running Pro</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DEPORTES ============ -->
+  <div class="sports-bar">
+    <div class="container">
+      <div class="sports-scroll">
+        <button class="sport-chip active" onclick="filtrarDeporte(this,'todos')">🏅 Todos</button>
+        <button class="sport-chip" onclick="filtrarDeporte(this,'futbol')">⚽ Fútbol</button>
+        <button class="sport-chip" onclick="filtrarDeporte(this,'running')">🏃 Running</button>
+        <button class="sport-chip" onclick="filtrarDeporte(this,'gym')">💪 Gym</button>
+        <button class="sport-chip" onclick="filtrarDeporte(this,'baloncesto')">🏀 Baloncesto</button>
+        <button class="sport-chip" onclick="filtrarDeporte(this,'tenis')">🎾 Tenis</button>
+        <button class="sport-chip" onclick="filtrarDeporte(this,'natacion')">🏊 Natación</button>
+        <button class="sport-chip" onclick="filtrarDeporte(this,'ciclismo')">🚴 Ciclismo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CATEGORÍAS ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Categorías</h2>
+        <a href="pages/catalogo.html">Ver todo →</a>
+      </div>
+
+      <div class="categories-grid">
+        <div class="cat-card cat-card-large" onclick="location.href='pages/catalogo.html?deporte=futbol'">
+          <div class="cat-emoji">⚽</div>
+          <div class="cat-overlay"></div>
+          <div class="cat-info">
+            <span class="cat-label">Fútbol</span>
+            <p class="cat-count">+120 productos</p>
+          </div>
+        </div>
+
+        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=running'">
+          <div class="cat-emoji">🏃</div>
+          <div class="cat-overlay"></div>
+          <div class="cat-info">
+            <span class="cat-label">Running</span>
+            <p class="cat-count">+80 productos</p>
+          </div>
+        </div>
+
+        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=gym'">
+          <div class="cat-emoji">💪</div>
+          <div class="cat-overlay"></div>
+          <div class="cat-info">
+            <span class="cat-label">Gym</span>
+            <p class="cat-count">+95 productos</p>
+          </div>
+        </div>
+
+        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=baloncesto'">
+          <div class="cat-emoji">🏀</div>
+          <div class="cat-overlay"></div>
+          <div class="cat-info">
+            <span class="cat-label">Basket</span>
+            <p class="cat-count">+60 productos</p>
+          </div>
+        </div>
+
+        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=tenis'">
+          <div class="cat-emoji">🎾</div>
+          <div class="cat-overlay"></div>
+          <div class="cat-info">
+            <span class="cat-label">Tenis</span>
+            <p class="cat-count">+45 productos</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NOVEDADES ============ -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="section-header">
+        <h2>Novedades</h2>
+        <a href="pages/catalogo.html">Ver todo →</a>
+      </div>
+
+      <div class="products-grid" id="productos-home">
+        <!-- Placeholders hasta conectar con la API -->
+        <div class="product-card">
+          <div class="product-card-img">
+            👕
+            <span class="product-badge">Nuevo</span>
+          </div>
+          <div class="product-card-body">
+            <p class="product-card-sport">Fútbol</p>
+            <h3 class="product-card-name">Camiseta Pro Match</h3>
+            <p class="product-card-sub">Tecnología DryFit · Tallas S–XXL</p>
+            <div class="product-card-footer">
+              <span class="product-card-price">49,99€</span>
+              <button class="product-card-add">+ Carrito</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-img">🩳</div>
+          <div class="product-card-body">
+            <p class="product-card-sport">Running</p>
+            <h3 class="product-card-name">Short Aero Run</h3>
+            <p class="product-card-sub">Ligero y transpirable</p>
+            <div class="product-card-footer">
+              <span class="product-card-price">34,99€</span>
+              <button class="product-card-add">+ Carrito</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-img">
+            🧢
+            <span class="product-badge">-20%</span>
+          </div>
+          <div class="product-card-body">
+            <p class="product-card-sport">Gym</p>
+            <h3 class="product-card-name">Cap Training</h3>
+            <p class="product-card-sub">Ajuste ergonómico</p>
+            <div class="product-card-footer">
+              <span class="product-card-price">19,99€</span>
+              <button class="product-card-add">+ Carrito</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-img">👟</div>
+          <div class="product-card-body">
+            <p class="product-card-sport">Running</p>
+            <h3 class="product-card-name">Zapatilla SpeedX</h3>
+            <p class="product-card-sub">Suela de carbono</p>
+            <div class="product-card-footer">
+              <span class="product-card-price">119,99€</span>
+              <button class="product-card-add">+ Carrito</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BANNER PROMO ============ -->
+  <div class="container">
+    <div class="promo-strip">
+      <div>
+        <h2>Entrena más.<br>Rinde mejor.</h2>
+        <p>Descubre toda la colección Sport Plus 2025/2026</p>
+      </div>
+      <a href="pages/catalogo.html" class="btn btn-black">Explorar ahora</a>
+    </div>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="margin-top: 7rem;">
+    <div class="container">
+      <div class="footer-inner">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.4rem;text-transform:uppercase;">
+          Sport<span style="color:var(--accent)">+</span>
+        </span>
+        <p>© 2026 Sport Plus · Proyecto ABP 1DAM/1DAW</p>
+        <p style="color:var(--muted-2)">Hecho con 💪 y mucho CSS</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/productos.js"></script>
+  <script>
+    // Contador carrito
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    document.getElementById('cart-count').textContent = carrito.length;
+
+    // Navbar: mostrar usuario o botón de entrar
+    const token = localStorage.getItem('token');
+    const navUser = document.getElementById('nav-user');
+    navUser.innerHTML = token
+      ? `<a href="pages/perfil.html" class="btn btn-ghost">Mi cuenta</a>`
+      : `<a href="pages/login.html" class="btn btn-ghost">Entrar</a>`;
+
+    // Filtro deportes
+    function filtrarDeporte(el, deporte) {
+      document.querySelectorAll('.sport-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      // TODO: conectar con la API cuando el backend esté listo
+      // cargarProductos({ deporte });
+      console.log('Filtrando por deporte:', deporte);
+    }
+
+    // TODO: descomentar cuando el backend esté listo
+    // cargarProductosHome();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo — Sport Plus</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    body { padding-top: 72px; }
+
+    /* ——— CABECERA ——— */
+    .catalog-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 0 2rem;
+    }
+
+    .catalog-header h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      margin-bottom: 0.5rem;
+    }
+
+    .catalog-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ——— LAYOUT PRINCIPAL ——— */
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2.5rem;
+      padding: 3rem 0 5rem;
+      align-items: start;
+    }
+
+    /* ——— SIDEBAR FILTROS ——— */
+    .filters-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      position: sticky;
+      top: 90px;
+    }
+
+    .filter-title {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-group { margin-bottom: 1.8rem; }
+
+    .filter-group-label {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      padding: 0.4rem 0.5rem;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition);
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .filter-option:hover { background: var(--surface-2); color: var(--text); }
+    .filter-option.active { color: var(--accent); }
+
+    .filter-option input[type="radio"],
+    .filter-option input[type="checkbox"] {
+      accent-color: var(--accent);
+      width: 14px;
+      height: 14px;
+    }
+
+    .filter-btn-reset {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border-light);
+      color: var(--muted);
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.6rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--transition);
+      margin-top: 0.5rem;
+    }
+    .filter-btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Rango de precio */
+    .price-range {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .price-range input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .price-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    #precio-valor {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* ——— ZONA DE RESULTADOS ——— */
+    .results-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .results-count {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .results-count strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    /* Buscador */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      flex: 1;
+      max-width: 320px;
+    }
+
+    .search-bar input {
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 0.65rem 1rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--text);
+      width: 100%;
+    }
+
+    .search-bar input::placeholder { color: var(--muted-2); }
+
+    .search-bar button {
+      background: var(--accent);
+      border: none;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background var(--transition);
+    }
+    .search-bar button:hover { background: var(--accent-2); }
+
+    /* Ordenar */
+    .sort-select {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 1rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--text);
+      outline: none;
+      cursor: pointer;
+    }
+    .sort-select option { background: var(--surface); }
+
+    /* Estado vacío / cargando */
+    .state-box {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 2rem;
+      color: var(--muted);
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .state-box span { font-size: 3rem; }
+
+    .state-box p {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ——— CARGAR MÁS ——— */
+    .load-more-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 3rem;
+    }
+
+    #btn-cargar-mas {
+      display: none; /* se muestra con JS solo si hay más */
+      padding: 0.9rem 3rem;
+      font-size: 1rem;
+    }
+
+    #btn-cargar-mas.visible { display: inline-flex; }
+
+    .load-more-info {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* Barra de progreso */
+    .load-progress-bar {
+      width: 220px;
+      height: 3px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .load-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 100px;
+      transition: width 0.4s ease;
+    }
+
+    /* ——— RESPONSIVE ——— */
+    @media (max-width: 900px) {
+      .catalog-layout { grid-template-columns: 1fr; }
+      .filters-panel { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">Sport<span>+</span></a>
+    <ul class="navbar-links">
+      <li><a href="catalogo.html" class="active">Catálogo</a></li>
+      <li><a href="catalogo.html?deporte=futbol">Fútbol</a></li>
+      <li><a href="catalogo.html?deporte=running">Running</a></li>
+      <li><a href="catalogo.html?deporte=gym">Gym</a></li>
+      <li><a href="catalogo.html?deporte=baloncesto">Baloncesto</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <div id="nav-user"></div>
+      <a href="carrito.html" class="navbar-icon-btn">
+        🛒 <span>Carrito</span>
+        <span class="cart-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ============ CABECERA ============ -->
+  <div class="catalog-header">
+    <div class="container">
+      <h1>Catálogo</h1>
+      <p id="header-desc">Toda la colección Sport Plus — temporada 2025/2026</p>
+    </div>
+  </div>
+
+  <!-- ============ LAYOUT ============ -->
+  <div class="container">
+    <div class="catalog-layout">
+
+      <!-- ——— SIDEBAR FILTROS ——— -->
+      <aside class="filters-panel">
+        <p class="filter-title">⚙ Filtros</p>
+
+        <!-- Deporte -->
+        <div class="filter-group">
+          <span class="filter-group-label">Deporte</span>
+          <div class="filter-options">
+            <label class="filter-option active">
+              <input type="radio" name="deporte" value="todos" checked onchange="aplicarFiltros()"> Todos
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="deporte" value="futbol" onchange="aplicarFiltros()"> ⚽ Fútbol
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="deporte" value="running" onchange="aplicarFiltros()"> 🏃 Running
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="deporte" value="gym" onchange="aplicarFiltros()"> 💪 Gym
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="deporte" value="baloncesto" onchange="aplicarFiltros()"> 🏀 Baloncesto
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="deporte" value="tenis" onchange="aplicarFiltros()"> 🎾 Tenis
+            </label>
+          </div>
+        </div>
+
+        <!-- Categoría -->
+        <div class="filter-group">
+          <span class="filter-group-label">Categoría</span>
+          <div class="filter-options">
+            <label class="filter-option">
+              <input type="checkbox" value="camisetas" onchange="aplicarFiltros()"> Camisetas
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" value="pantalones" onchange="aplicarFiltros()"> Pantalones
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" value="sudaderas" onchange="aplicarFiltros()"> Sudaderas
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" value="chaquetas" onchange="aplicarFiltros()"> Chaquetas
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" value="zapatillas" onchange="aplicarFiltros()"> Zapatillas
+            </label>
+          </div>
+        </div>
+
+        <!-- Precio -->
+        <div class="filter-group">
+          <span class="filter-group-label">Precio máximo</span>
+          <div class="price-range">
+            <input type="range" id="precio-range" min="10" max="200" value="200" step="5"
+              oninput="actualizarPrecio(this.value)">
+            <div class="price-labels">
+              <span>10€</span>
+              <span id="precio-valor">200€</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="filter-btn-reset" onclick="resetFiltros()">✕ Limpiar filtros</button>
+      </aside>
+
+      <!-- ——— RESULTADOS ——— -->
+      <div class="results-area">
+        <div class="results-toolbar">
+          <p class="results-count">
+            Mostrando <strong id="num-visibles">0</strong> de <strong id="num-resultados">0</strong> productos
+          </p>
+
+          <div class="search-bar">
+            <input type="text" id="buscador" placeholder="Buscar producto..."
+              oninput="aplicarFiltros()">
+            <button>🔍</button>
+          </div>
+
+          <select class="sort-select" id="ordenar" onchange="aplicarFiltros()">
+            <option value="default">Ordenar por</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+            <option value="nombre">Nombre A-Z</option>
+          </select>
+        </div>
+
+        <!-- Grid de productos -->
+        <div class="products-grid" id="grid-productos">
+          <div class="state-box">
+            <span>⏳</span>
+            <p>Cargando productos...</p>
+          </div>
+        </div>
+
+        <!-- Cargar más -->
+        <div class="load-more-wrapper">
+          <div class="load-progress-bar">
+            <div class="load-progress-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+          <p class="load-more-info" id="load-more-info"></p>
+          <button id="btn-cargar-mas" class="btn btn-outline" onclick="cargarMas()">
+            Cargar más productos
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.4rem;text-transform:uppercase;">
+          Sport<span style="color:var(--accent)">+</span>
+        </span>
+        <p>© 2026 Sport Plus · Proyecto ABP 1DAM/1DAW</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/productos.js"></script>
+  <script>
+    // ——— Estado de filtros ———
+    let filtrosActivos = {
+      deporte: "todos",
+      categorias: [],
+      precioMax: 200,
+      busqueda: "",
+      orden: "default"
+    };
+
+    // ——— Iniciar página ———
+    document.addEventListener("DOMContentLoaded", async () => {
+      iniciarNavbar();
+
+      // Leer ?deporte= de la URL
+      const deporteParam = getParam("deporte");
+      if (deporteParam) {
+        filtrosActivos.deporte = deporteParam;
+        const radio = document.querySelector(`input[name="deporte"][value="${deporteParam}"]`);
+        if (radio) radio.checked = true;
+      }
+
+      await cargarCatalogo();
+    });
+
+    // ——— Cargar y renderizar productos (primera vez / al filtrar) ———
+    async function cargarCatalogo() {
+      const grid = document.getElementById("grid-productos");
+      grid.innerHTML = `<div class="state-box"><span>⏳</span><p>Cargando...</p></div>`;
+
+      let productos = await fetchProductos({
+        deporte: filtrosActivos.deporte,
+        precioMax: filtrosActivos.precioMax,
+        busqueda: filtrosActivos.busqueda
+      });
+
+      // Filtro de categorías (cliente)
+      if (filtrosActivos.categorias.length > 0) {
+        productos = productos.filter(p => filtrosActivos.categorias.includes(p.categoria));
+      }
+
+      // Ordenar
+      switch (filtrosActivos.orden) {
+        case "precio-asc":  productos.sort((a, b) => a.precio - b.precio); break;
+        case "precio-desc": productos.sort((a, b) => b.precio - a.precio); break;
+        case "nombre":      productos.sort((a, b) => a.nombre.localeCompare(b.nombre)); break;
+      }
+
+      // Iniciar paginación
+      const primera = iniciarPaginacion(productos);
+
+      document.getElementById("num-resultados").textContent = productos.length;
+
+      if (productos.length === 0) {
+        grid.innerHTML = `
+          <div class="state-box">
+            <span>🔍</span>
+            <p>No hay productos con estos filtros</p>
+          </div>`;
+        ocultarBotonCargarMas();
+        return;
+      }
+
+      grid.innerHTML = primera.map(renderizarTarjeta).join("");
+      actualizarUI();
+    }
+
+    // ——— Cargar más: añade la siguiente tanda al grid ———
+    async function cargarMas() {
+      const btn = document.getElementById("btn-cargar-mas");
+      btn.textContent = "Cargando...";
+      btn.disabled = true;
+
+      // Pequeña pausa para simular carga (quitar cuando haya API real)
+      await new Promise(r => setTimeout(r, 400));
+
+      const siguientes = cargarSiguientePagina();
+      const grid = document.getElementById("grid-productos");
+      grid.insertAdjacentHTML("beforeend", siguientes.map(renderizarTarjeta).join(""));
+
+      btn.textContent = "Cargar más productos";
+      btn.disabled = false;
+
+      actualizarUI();
+    }
+
+    // ——— Actualiza contador, barra de progreso y visibilidad del botón ———
+    function actualizarUI() {
+      const total    = _productosActuales.length;
+      const visibles = Math.min(_paginaActual * PRODUCTOS_POR_PAGINA, total);
+      const pct      = total > 0 ? Math.round((visibles / total) * 100) : 0;
+
+      document.getElementById("num-visibles").textContent = visibles;
+      document.getElementById("progress-fill").style.width = pct + "%";
+      document.getElementById("load-more-info").textContent =
+        `${visibles} de ${total} productos`;
+
+      const btn = document.getElementById("btn-cargar-mas");
+      if (hayMasProductos()) {
+        btn.classList.add("visible");
+      } else {
+        btn.classList.remove("visible");
+      }
+    }
+
+    function ocultarBotonCargarMas() {
+      document.getElementById("btn-cargar-mas").classList.remove("visible");
+      document.getElementById("load-more-info").textContent = "";
+      document.getElementById("progress-fill").style.width = "0%";
+      document.getElementById("num-visibles").textContent = "0";
+    }
+
+    // ——— Aplicar filtros al cambiar cualquier control ———
+    function aplicarFiltros() {
+      const deporteSeleccionado = document.querySelector('input[name="deporte"]:checked');
+      filtrosActivos.deporte = deporteSeleccionado ? deporteSeleccionado.value : "todos";
+
+      const categoriasChecked = document.querySelectorAll('input[type="checkbox"]:checked');
+      filtrosActivos.categorias = Array.from(categoriasChecked).map(c => c.value);
+
+      filtrosActivos.precioMax = parseInt(document.getElementById("precio-range").value);
+      filtrosActivos.busqueda  = document.getElementById("buscador").value.trim();
+      filtrosActivos.orden     = document.getElementById("ordenar").value;
+
+      cargarCatalogo();
+    }
+
+    // ——— Actualizar label de precio ———
+    function actualizarPrecio(valor) {
+      document.getElementById("precio-valor").textContent = valor + "€";
+      aplicarFiltros();
+    }
+
+    // ——— Limpiar todos los filtros ———
+    function resetFiltros() {
+      document.querySelector('input[name="deporte"][value="todos"]').checked = true;
+      document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+      document.getElementById("precio-range").value = 200;
+      document.getElementById("precio-valor").textContent = "200€";
+      document.getElementById("buscador").value = "";
+      document.getElementById("ordenar").value = "default";
+
+      filtrosActivos = { deporte: "todos", categorias: [], precioMax: 200, busqueda: "", orden: "default" };
+      cargarCatalogo();
+    }
+  </script>
+
+</body>
+</html>
