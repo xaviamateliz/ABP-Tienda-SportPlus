@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sport Plus — Ropa Deportiva</title>
-  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="css/main.css" />
   <style>
     /* ——— HERO ——— */
     .hero {
@@ -126,47 +126,6 @@
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    /* ——— DEPORTES / CATEGORÍAS ——— */
-    .sports-bar {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 1.5rem 0;
-    }
-
-    .sports-scroll {
-      display: flex;
-      gap: 0.6rem;
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding-bottom: 2px;
-    }
-    .sports-scroll::-webkit-scrollbar { display: none; }
-
-    .sport-chip {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.55rem 1.3rem;
-      border: 1px solid var(--border-light);
-      border-radius: 100px;
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all var(--transition);
-      white-space: nowrap;
-      color: var(--muted);
-      background: transparent;
-    }
-    .sport-chip:hover, .sport-chip.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--white);
-    }
-
     /* ——— CATEGORÍAS VISUALES ——— */
     .categories-grid {
       display: grid;
@@ -192,14 +151,7 @@
 
     .cat-card-large { grid-row: span 2; }
 
-    .cat-emoji {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -60%);
-      font-size: 5rem;
-      transition: transform 0.3s ease;
-      user-select: none;
-    }
+    .cat-emoji { display: none; }
     .cat-card-large .cat-emoji { font-size: 9rem; transform: translate(-50%, -55%); }
     .cat-card:hover.cat-card-large .cat-emoji { transform: translate(-50%, -55%) scale(1.05); }
 
@@ -325,32 +277,22 @@
       </div>
     </div>
 
-    <div class="hero-right">
-      <div class="hero-big-emoji">🏃</div>
+    <div class="hero-right" style="padding:0; background:#0d0d0d;">
+      <img src="https://i1.t4s.cz/products/fb7919-010/nike-pro-dri-fit-tight-1100277-fb7919-0103.png"
+          alt="Deportista"
+          style="width:100%; height:100%; object-fit:contain; object-position:top center; opacity:0.9;">
       <div class="hero-tag">
         <p><span class="hero-tag-dot"></span>Más vendido ahora</p>
-        <strong>Camiseta Running Pro</strong>
+        <strong>Nike Pro Dri-FIT Tight</strong>
       </div>
     </div>
   </section>
 
-  <!-- ============ DEPORTES ============ -->
-  <div class="sports-bar">
-    <div class="container">
-      <div class="sports-scroll">
-        <button class="sport-chip active" onclick="filtrarDeporte(this,'todos')">🏅 Todos</button>
-        <button class="sport-chip" onclick="filtrarDeporte(this,'futbol')">⚽ Fútbol</button>
-        <button class="sport-chip" onclick="filtrarDeporte(this,'running')">🏃 Running</button>
-        <button class="sport-chip" onclick="filtrarDeporte(this,'gym')">💪 Gym</button>
-        <button class="sport-chip" onclick="filtrarDeporte(this,'baloncesto')">🏀 Baloncesto</button>
-        <button class="sport-chip" onclick="filtrarDeporte(this,'tenis')">🎾 Tenis</button>
-        <button class="sport-chip" onclick="filtrarDeporte(this,'natacion')">🏊 Natación</button>
-        <button class="sport-chip" onclick="filtrarDeporte(this,'ciclismo')">🚴 Ciclismo</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- ============ CATEGORÍAS ============ -->
+  <div style="border-top: 1px solid var(--border);"></div>
+  <div style="border-top: 1px solid var(--border); margin-top: 1.5rem;"></div>
+  
+<!-- ============ CATEGORÍAS ============ -->
   <section class="section">
     <div class="container">
       <div class="section-header">
@@ -359,8 +301,9 @@
       </div>
 
       <div class="categories-grid">
-        <div class="cat-card cat-card-large" onclick="location.href='pages/catalogo.html?deporte=futbol'">
-          <div class="cat-emoji">⚽</div>
+
+        <div class="cat-card cat-card-large" onclick="location.href='pages/catalogo.html?deporte=futbol'"
+             style="background-image:url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80');background-size:cover;background-position:center;">
           <div class="cat-overlay"></div>
           <div class="cat-info">
             <span class="cat-label">Fútbol</span>
@@ -368,8 +311,8 @@
           </div>
         </div>
 
-        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=running'">
-          <div class="cat-emoji">🏃</div>
+        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=running'"
+             style="background-image:url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80');background-size:cover;background-position:center;">
           <div class="cat-overlay"></div>
           <div class="cat-info">
             <span class="cat-label">Running</span>
@@ -377,8 +320,8 @@
           </div>
         </div>
 
-        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=gym'">
-          <div class="cat-emoji">💪</div>
+        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=gym'"
+             style="background-image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80');background-size:cover;background-position:center;">
           <div class="cat-overlay"></div>
           <div class="cat-info">
             <span class="cat-label">Gym</span>
@@ -386,8 +329,8 @@
           </div>
         </div>
 
-        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=baloncesto'">
-          <div class="cat-emoji">🏀</div>
+        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=baloncesto'"
+             style="background-image:url('https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80');background-size:cover;background-position:center;">
           <div class="cat-overlay"></div>
           <div class="cat-info">
             <span class="cat-label">Basket</span>
@@ -395,88 +338,31 @@
           </div>
         </div>
 
-        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=tenis'">
-          <div class="cat-emoji">🎾</div>
+        <div class="cat-card" onclick="location.href='pages/catalogo.html?deporte=tenis'"
+             style="background-image:url('https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=800&q=80');background-size:cover;background-position:center;">
           <div class="cat-overlay"></div>
           <div class="cat-info">
             <span class="cat-label">Tenis</span>
             <p class="cat-count">+45 productos</p>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
   <!-- ============ NOVEDADES ============ -->
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <div class="section-header">
-        <h2>Novedades</h2>
-        <a href="pages/catalogo.html">Ver todo →</a>
-      </div>
-
-      <div class="products-grid" id="productos-home">
-        <!-- Placeholders hasta conectar con la API -->
-        <div class="product-card">
-          <div class="product-card-img">
-            👕
-            <span class="product-badge">Nuevo</span>
-          </div>
-          <div class="product-card-body">
-            <p class="product-card-sport">Fútbol</p>
-            <h3 class="product-card-name">Camiseta Pro Match</h3>
-            <p class="product-card-sub">Tecnología DryFit · Tallas S–XXL</p>
-            <div class="product-card-footer">
-              <span class="product-card-price">49,99€</span>
-              <button class="product-card-add">+ Carrito</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="product-card-img">🩳</div>
-          <div class="product-card-body">
-            <p class="product-card-sport">Running</p>
-            <h3 class="product-card-name">Short Aero Run</h3>
-            <p class="product-card-sub">Ligero y transpirable</p>
-            <div class="product-card-footer">
-              <span class="product-card-price">34,99€</span>
-              <button class="product-card-add">+ Carrito</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="product-card-img">
-            🧢
-            <span class="product-badge">-20%</span>
-          </div>
-          <div class="product-card-body">
-            <p class="product-card-sport">Gym</p>
-            <h3 class="product-card-name">Cap Training</h3>
-            <p class="product-card-sub">Ajuste ergonómico</p>
-            <div class="product-card-footer">
-              <span class="product-card-price">19,99€</span>
-              <button class="product-card-add">+ Carrito</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="product-card-img">👟</div>
-          <div class="product-card-body">
-            <p class="product-card-sport">Running</p>
-            <h3 class="product-card-name">Zapatilla SpeedX</h3>
-            <p class="product-card-sub">Suela de carbono</p>
-            <div class="product-card-footer">
-              <span class="product-card-price">119,99€</span>
-              <button class="product-card-add">+ Carrito</button>
-            </div>
-          </div>
-        </div>
-      </div>
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-header">
+      <h2>Novedades</h2>
+      <a href="pages/catalogo.html">Ver todo →</a>
     </div>
-  </section>
+    <div class="products-grid" id="productos-home">
+      <!-- Se carga dinámicamente -->
+    </div>
+  </div>
+</section>
 
   <!-- ============ BANNER PROMO ============ -->
   <div class="container">
@@ -496,41 +382,55 @@
         <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.4rem;text-transform:uppercase;">
           Sport<span style="color:var(--accent)">+</span>
         </span>
-        <p>© 2026 Sport Plus · Proyecto ABP 1DAM/1DAW</p>
-        <p style="color:var(--muted-2)">Hecho con 💪 y mucho CSS</p>
+        <p>© 2026 Sport Plus · Proyecto ABP 1DAM</p>
       </div>
     </div>
   </footer>
 
   <!-- ============ SCRIPTS ============ -->
-  <script src="../js/config.js"></script>
-  <script src="../js/utils.js"></script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/productos.js"></script>
-  <script>
+  <script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/productos.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
     // Contador carrito
     const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     document.getElementById('cart-count').textContent = carrito.length;
 
-    // Navbar: mostrar usuario o botón de entrar
+    // Navbar usuario
     const token = localStorage.getItem('token');
     const navUser = document.getElementById('nav-user');
     navUser.innerHTML = token
       ? `<a href="pages/perfil.html" class="btn btn-ghost">Mi cuenta</a>`
-      : `<a href="pages/login.html" class="btn btn-ghost">Entrar</a>`;
+      : `<a href="pages/login.html">ENTRAR</a>`;
 
-    // Filtro deportes
-    function filtrarDeporte(el, deporte) {
-      document.querySelectorAll('.sport-chip').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      // TODO: conectar con la API cuando el backend esté listo
-      // cargarProductos({ deporte });
-      console.log('Filtrando por deporte:', deporte);
+    // Cargar novedades
+    await cargarNovedadesHome();
+  });
+
+  async function cargarNovedadesHome() {
+    const grid = document.getElementById('productos-home');
+    grid.innerHTML = `<div style="color:var(--muted);padding:2rem">Cargando...</div>`;
+
+    const productos = await fetchProductos();
+    const primeros = productos.slice(0, 3);
+
+    if (primeros.length === 0) {
+      grid.innerHTML = `<div style="color:var(--muted);padding:2rem">No hay productos disponibles.</div>`;
+      return;
     }
 
-    // TODO: descomentar cuando el backend esté listo
-    // cargarProductosHome();
-  </script>
+    grid.innerHTML = primeros.map(renderizarTarjeta).join('');
+    actualizarContadorCarrito();
+  }
+
+  function filtrarDeporte(el, deporte) {
+    document.querySelectorAll('.sport-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    console.log('Filtrando por deporte:', deporte);
+  }
+</script>
 
 </body>
 </html>
