@@ -109,6 +109,7 @@ paths:
             schema:
               type: object
               properties:
+                properties:
                 nombre:
                   type: string
                 descripcion:
@@ -118,6 +119,8 @@ paths:
                 stock:
                   type: integer
                 categoria_id:
+                  type: integer
+                id_tipo_producto:
                   type: integer
                 url_producto:
                   type: string
@@ -161,6 +164,7 @@ paths:
             schema:
               type: object
               properties:
+                properties:
                 nombre:
                   type: string
                 descripcion:
@@ -170,6 +174,8 @@ paths:
                 stock:
                   type: integer
                 categoria_id:
+                  type: integer
+                id_tipo_producto:
                   type: integer
                 url_producto:
                   type: string
@@ -195,18 +201,18 @@ paths:
         '404':
           description: El producto no existe
 
-  /api/categorias:
+  /api/deportes:
     get:
       tags:
-        - Categorías
-      summary: Listar todas las categorías disponibles
+        - Deportes
+      summary: Listar todos los deportes disponibles
       responses:
         '200':
-          description: Lista de categorías devuelta
+          description: Lista de deportes devuelta
     post:
       tags:
-        - Categorías
-      summary: Crear una nueva categoría para la tienda
+        - Deportes
+      summary: Crear un nuevo deporte para la tienda
       requestBody:
         required: true
         content:
@@ -218,7 +224,32 @@ paths:
                   type: string
       responses:
         '201':
-          description: Categoría creada con éxito
+          description: Deporte creado con éxito
+
+  /api/tipos_producto:
+    get:
+      tags:
+        - Tipos de Producto
+      summary: Listar todos los tipos de producto disponibles
+      responses:
+        '200':
+          description: Lista de tipos de producto devuelta
+    post:
+      tags:
+        - Tipos de Producto
+      summary: Crear un nuevo tipo de producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+      responses:
+        '201':
+          description: Tipo de producto creado con éxito
 
   /api/pedidos:
     get:

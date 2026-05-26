@@ -13,25 +13,26 @@ class Rol(db.Model):
 
     usuarios = db.relationship('Usuario', backref='rol', lazy=True)
 
-class Categoria(db.Model):
-    __tablename__ = 'categorias'
-
-    categoria_id = db.Column(db.SmallInteger, primary_key=True, autoincrement=True,nullable=False)
+class Deporte(db.Model):
+    __tablename__ = 'deportes'
+    categoria_id = db.Column(db.SmallInteger, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
 
-    productos = db.relationship('Producto', backref='categoria', lazy=True)
+class TipoProducto(db.Model):
+    __tablename__ = 'tipos_producto'
+    id_tipo_producto = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100))
 
 class Producto(db.Model):
     __tablename__ = 'productos'
-
-    producto_id = db.Column(db.SmallInteger, primary_key=True, autoincrement=True)
+    producto_id = db.Column(db.SmallInteger, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
     descripcion = db.Column(db.Text)
     precio = db.Column(db.Numeric(18, 2), nullable=False)
     stock = db.Column(db.SmallInteger, nullable=False)
-    categoria_id = db.Column(db.SmallInteger, db.ForeignKey('categorias.categoria_id', ondelete='NO ACTION', onupdate='NO ACTION'), nullable=False)
-    url_producto = db.Column(db.String(255), nullable=False)
-    lineas_pedido = db.relationship('LineaPedido', backref='producto', lazy=True)
+    categoria_id = db.Column(db.SmallInteger, db.ForeignKey('deportes.categoria_id'))
+    id_tipo_producto = db.Column(db.Integer, db.ForeignKey('tipos_producto.id_tipo_producto'))
+    url_producto = db.Column(db.String(255))
 
 class Usuario(db.Model):
     __tablename__ = 'usuarios'

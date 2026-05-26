@@ -1,0 +1,62 @@
+import pytest
+from unittest.mock import MagicMock
+from app.services.pedido_service import PedidoService
+from app.model.entidades import Pedido, LineaPedido
+
+@pytest.fixture
+def mock_pedido_repo(mocker):
+    # Crea un objeto vacío que actuará como un clon falso de la bd.
+    mock_repo = MagicMock()
+    # Cada vez que intente usar el repositorio real, usa el clon falso en su lugar
+    mocker.patch('app.services.pedido_service.PedidoRepository', return_value=mock_repo)
+    return mock_repo
+
+# Comprobar que las matemáticas del total funcionan
+def test_crear_pedido_calcula_total_correctamente(mock_pedido_repo, mocker):
+    # Como no queremos probar el DTO aquí, lo falsificamos para que devuelva solo el número del total y no nos moleste
+    mocker.patch('app.dtos.pedido_dto.PedidoDTO.to_json', side_effect=lambda x: {"total": x.total})
+    servicio = PedidoService()
+    # Le decimos a la base de datos falsa: "Cuando te manden guardar un pedido, di que sí y devuelve ese mismo pedido intacto".
+    mock_pedido_repo.guardar.side_effect = lambda p: p
+    
+    datos_compra = {
+        "usuario_id": 1,
+        "lineas": [
+            {"producto_id": 10, "cantidad": 2, "precio_unitario": 15.0},
+            {"producto_id": 11, "cantidad": 1, "precio_unitario": 20.0}
+        ]
+    }
+    
+    resultado = servicio.crear_pedido(datos_compra)
+    
+    assert resultado["total"] == 50.0
+    # Verifica que el código llegó al final y le dio la orden de guardar a la base de datos exactamente 1 vez.
+    mock_pedido_repo.guardar.assert_called_once()
+
+# Comprobar la actualización parcial
+def test_actualizar_solo_estado_pedido(mock_pedido_repo, mocker):
+    # Falsificamos los DTOs de ida y vuelta
+    mocker.patch('app.dtos.pedido_dto.PedidoDTO.from_json', return_value={"estado_pedido": True})
+    mocker.patch('app.dtos.pedido_dto.PedidoDTO.to_json', side_effect=lambda x: {"estado_pedido": x.estado_pedido})
+    
+    pedido_existente = Pedido(id=1, usuario_id=5, estado_pedido=False)
+    # Cuando busquen el pedido por un ID, entrega el pedido falso que acabamos de crear
+    mock_pedido_repo.obtener_por_id.return_value = pedido_existente
+    # p: p(parámetro de entrada: parámetro que devuelve la función anónima)
+    mock_pedido_repo.guardar.side_effect = lambda p: p
+    
+    servicio = PedidoService()
+    
+    resultado = servicio.actualizar_pedido(1, {"estado_pedido": True})
+    
+    assert resultado["estado_pedido"] is True
+    assert pedido_existente.usuario_id == 5
+
+def test_actualizar_pedido_inexistente_retorna_none(mock_pedido_repo):
+    mock_pedido_repo.obtener_por_id.return_value = None
+    servicio = PedidoService()
+    
+    resultado = servicio.actualizar_pedido(999, {"estado_pedido": True})
+    
+    assert resultado is None
+    mock_pedido_repo.guardar.assert_not_called()

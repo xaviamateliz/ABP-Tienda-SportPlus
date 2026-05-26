@@ -24,6 +24,7 @@ class ProductoService:
             precio=datos_procesados.get("precio"),
             stock=datos_procesados.get("stock"),
             categoria_id=datos_procesados.get("categoria_id"),
+            id_tipo_producto=datos_procesados.get("id_tipo_producto"),
             url_producto=datos_procesados.get("url_producto")
         )
         producto_guardado = self.repository.guardar(nuevo_producto)
@@ -33,13 +34,17 @@ class ProductoService:
         producto = self.repository.obtener_por_id(producto_id)
         if not producto:
             return None
+            
         datos_procesados = ProductoDTO.from_json(datos)
+        
         producto.nombre = datos_procesados.get("nombre", producto.nombre)
         producto.descripcion = datos_procesados.get("descripcion", producto.descripcion)
         producto.precio = datos_procesados.get("precio", producto.precio)
         producto.stock = datos_procesados.get("stock", producto.stock)
         producto.categoria_id = datos_procesados.get("categoria_id", producto.categoria_id)
-        producto.url_producto=datos_procesados.get("url_producto", producto.url_producto)
+        producto.id_tipo_producto = datos_procesados.get("id_tipo_producto", producto.id_tipo_producto)
+        producto.url_producto = datos_procesados.get("url_producto", producto.url_producto)
+        
         producto_actualizado = self.repository.guardar(producto)
         return ProductoDTO.to_json(producto_actualizado)
 
