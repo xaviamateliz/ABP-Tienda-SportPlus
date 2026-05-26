@@ -72,7 +72,7 @@ h3 {
    LAYOUT
    ============================================ */
 .container { max-width: 1320px; margin: 0 auto; padding: 0 2rem; }
-.section { padding: 7rem 0; }
+.section { padding: 5rem 0; }
 
 /* ============================================
    BOTONES
@@ -177,7 +177,7 @@ h3 {
   border-color: var(--border-light);
 }
 .product-card-img {
-  width: 100%; aspect-ratio: 3/4;
+  width: 100%; aspect-ratio: 4/4;
   background: var(--surface-2);
   display: flex; align-items: center; justify-content: center;
   font-size: 5rem;
@@ -225,7 +225,7 @@ h3 {
    ============================================ */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
