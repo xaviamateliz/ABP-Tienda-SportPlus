@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedidos Admin — Sport Plus</title>
+  <link rel="stylesheet" href="../../css/main.css" />
+  <style>
+    .admin-layout { display: flex; min-height: 100vh; padding-top: 72px; }
+
+    /* SIDEBAR */
+    .admin-sidebar { width: 240px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); position: fixed; top: 72px; left: 0; bottom: 0; display: flex; flex-direction: column; padding: 2rem 0; z-index: 100; }
+    .sidebar-label { font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-2); padding: 0 1.5rem; margin-bottom: 0.5rem; margin-top: 1.5rem; }
+    .sidebar-label:first-child { margin-top: 0; }
+    .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); transition: all var(--transition); border-left: 3px solid transparent; }
+    .sidebar-link:hover { color: var(--white); background: var(--surface-2); }
+    .sidebar-link.active { color: var(--white); border-left-color: var(--accent); background: var(--surface-2); }
+    .sidebar-link .icon { font-size: 1.1rem; width: 20px; text-align: center; }
+    .sidebar-bottom { margin-top: auto; padding: 1rem 0; border-top: 1px solid var(--border); }
+
+    /* MAIN */
+    .admin-main { margin-left: 240px; flex: 1; padding: 2.5rem; }
+
+    .page-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; gap: 1rem; flex-wrap: wrap; }
+    .page-eyebrow { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+    .page-eyebrow-line { width: 24px; height: 2px; background: var(--accent); }
+    .page-eyebrow span { font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+    .page-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; text-transform: uppercase; color: var(--white); line-height: 1; }
+
+    /* FILTROS */
+    .toolbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .search-input { background: var(--surface); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.65rem 1rem; font-family: var(--font-body); font-size: 0.9rem; color: var(--text); outline: none; width: 240px; transition: border-color var(--transition); }
+    .search-input:focus { border-color: var(--accent); }
+    .search-input::placeholder { color: var(--muted-2); }
+    .filter-btn { background: var(--surface); border: 1px solid var(--border-light); color: var(--muted); border-radius: var(--radius-sm); padding: 0.65rem 1rem; font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all var(--transition); }
+    .filter-btn:hover, .filter-btn.active { color: var(--white); border-color: var(--white); }
+    .filter-btn.active-accent { color: var(--accent); border-color: var(--accent); }
+
+    /* TABLA */
+    .admin-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .admin-table { width: 100%; border-collapse: collapse; }
+    .admin-table th { font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 0.75rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+    .admin-table td { padding: 1rem 1.5rem; font-size: 0.9rem; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .status-badge { display: inline-block; padding: 0.2rem 0.6rem; font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: var(--radius-sm); }
+    .status-pendiente { background: rgba(255,193,7,0.15); color: #ffc107; }
+    .status-enviado   { background: rgba(68,255,136,0.1); color: #44ff88; }
+    .status-cancelado { background: rgba(255,61,0,0.15); color: var(--accent); }
+    .status-entregado { background: rgba(100,149,237,0.15); color: cornflowerblue; }
+
+    .btn-table { background: transparent; border: 1px solid var(--border-light); color: var(--muted); border-radius: var(--radius-sm); padding: 0.35rem 0.75rem; font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all var(--transition); }
+    .btn-table:hover { color: var(--white); border-color: var(--white); }
+
+    /* MODAL DETALLE */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index: 500; display: none; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border-bottom: 1px solid var(--border); }
+    .modal-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; text-transform: uppercase; color: var(--white); }
+    .modal-close { background: none; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; transition: color var(--transition); }
+    .modal-close:hover { color: var(--white); }
+    .modal-body { padding: 1.5rem; }
+    .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; padding: 1.25rem 1.5rem; border-top: 1px solid var(--border); }
+
+    .detail-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: var(--muted); }
+    .detail-value { color: var(--white); font-weight: 500; }
+
+    .estado-select { background: var(--surface-2); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-family: var(--font-body); font-size: 0.9rem; color: var(--text); outline: none; cursor: pointer; }
+    .estado-select:focus { border-color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="../../index.html" class="navbar-logo">Sport<span>+</span> <span style="font-size:0.7rem;color:var(--muted);margin-left:0.5rem;letter-spacing:0.15em;">ADMIN</span></a>
+  <div class="navbar-actions">
+    <span id="admin-nombre" style="font-size:0.85rem;color:var(--muted);"></span>
+    <button class="btn btn-ghost" onclick="logout()">Cerrar sesión</button>
+  </div>
+</nav>
+
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <span class="sidebar-label">Panel</span>
+    <a href="dashboard.html" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
+    <span class="sidebar-label">Gestión</span>
+    <a href="productos.html" class="sidebar-link"><span class="icon">👟</span> Productos</a>
+    <a href="pedidos.html" class="sidebar-link active"><span class="icon">📦</span> Pedidos</a>
+    <div class="sidebar-bottom">
+      <a href="../../index.html" class="sidebar-link"><span class="icon">🏠</span> Ver tienda</a>
+      <a href="#" class="sidebar-link" onclick="logout()"><span class="icon">🚪</span> Salir</a>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO -->
+  <main class="admin-main">
+
+    <div class="page-header">
+      <div>
+        <div class="page-eyebrow"><div class="page-eyebrow-line"></div><span>Gestión</span></div>
+        <h1 class="page-title">Pedidos</h1>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input class="search-input" type="text" id="buscador" placeholder="Buscar por cliente o #pedido…" oninput="filtrarPedidos()" />
+      <button class="filter-btn active" id="filtro-todos" onclick="setFiltro('todos')">Todos</button>
+      <button class="filter-btn" id="filtro-PENDIENTE" onclick="setFiltro('PENDIENTE')">Pendientes</button>
+      <button class="filter-btn" id="filtro-ENVIADO" onclick="setFiltro('ENVIADO')">Enviados</button>
+      <button class="filter-btn" id="filtro-ENTREGADO" onclick="setFiltro('ENTREGADO')">Entregados</button>
+      <button class="filter-btn" id="filtro-CANCELADO" onclick="setFiltro('CANCELADO')">Cancelados</button>
+    </div>
+
+    <div class="admin-card">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>#Pedido</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-pedidos">
+          <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem;">Cargando pedidos…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL DETALLE PEDIDO -->
+<div class="modal-overlay" id="modal-pedido">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-titulo">Pedido #—</span>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="detalle-contenido"></div>
+      <div style="margin-top:1.5rem;">
+        <label class="form-label" style="display:block;margin-bottom:0.5rem;">Cambiar estado</label>
+        <select class="estado-select" id="nuevo-estado">
+          <option value="PENDIENTE">Pendiente</option>
+          <option value="ENVIADO">Enviado</option>
+          <option value="ENTREGADO">Entregado</option>
+          <option value="CANCELADO">Cancelado</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="cerrarModal()">Cerrar</button>
+      <button class="btn btn-primary" onclick="actualizarEstado()">Guardar estado</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/config.js"></script>
+<script src="../../js/utils.js"></script>
+<script src="../../js/auth.js"></script>
+<script>
+  // Protección de ruta
+  const rol = localStorage.getItem('rol');
+  if (!rol || rol !== 'ADMIN') window.location.href = '../../index.html';
+
+  const nombre = localStorage.getItem('nombre');
+  if (nombre) document.getElementById('admin-nombre').textContent = nombre;
+
+  let pedidos = [];
+  let filtroActual = 'todos';
+  let pedidoSeleccionado = null;
+
+  async function cargarPedidos() {
+    if (MOCK_MODE) {
+      pedidos = [
+        { id: 1041, cliente: 'Carlos Martínez', email: 'carlos@mail.com', fecha: '2026-05-20', total: 89.90, estado: 'PENDIENTE', productos: ['Zapatillas Running Pro x1'] },
+        { id: 1040, cliente: 'Laura García', email: 'laura@mail.com', fecha: '2026-05-19', total: 124.00, estado: 'ENVIADO', productos: ['Camiseta Técnica x2', 'Mochila Trail x1'] },
+        { id: 1039, cliente: 'Marc Puig', email: 'marc@mail.com', fecha: '2026-05-18', total: 45.50, estado: 'ENTREGADO', productos: ['Calcetines Pro x3'] },
+        { id: 1038, cliente: 'Sara Vidal', email: 'sara@mail.com', fecha: '2026-05-17', total: 210.00, estado: 'CANCELADO', productos: ['Zapatillas Trail x1', 'Chaqueta Técnica x1'] },
+        { id: 1037, cliente: 'Pau Ferrer', email: 'pau@mail.com', fecha: '2026-05-16', total: 67.00, estado: 'PENDIENTE', productos: ['Pantalón Running x1'] },
+      ];
+      renderTabla();
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE_URL}/pedidos`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        pedidos = Array.isArray(data) ? data : data.pedidos || [];
+        renderTabla();
+      }
+    } catch (err) { console.error('Error cargando pedidos:', err); }
+  }
+
+  function renderTabla() {
+    const q = document.getElementById('buscador').value.toLowerCase();
+    let lista = pedidos;
+    if (filtroActual !== 'todos') lista = lista.filter(p => p.estado === filtroActual);
+    if (q) lista = lista.filter(p => p.cliente?.toLowerCase().includes(q) || String(p.id).includes(q));
+
+    const tbody = document.getElementById('tabla-pedidos');
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem;">No hay pedidos</td></tr>';
+      return;
+    }
+    tbody.innerHTML = lista.map(p => `
+      <tr>
+        <td><strong>#${p.id}</strong></td>
+        <td>${p.cliente || p.usuario || '—'}</td>
+        <td style="color:var(--muted)">${p.fecha || '—'}</td>
+        <td><strong>${parseFloat(p.total || 0).toFixed(2)}€</strong></td>
+        <td><span class="status-badge status-${(p.estado||'').toLowerCase()}">${p.estado || '—'}</span></td>
+        <td><button class="btn-table" onclick="verDetalle(${p.id})">Ver detalle</button></td>
+      </tr>
+    `).join('');
+  }
+
+  function filtrarPedidos() { renderTabla(); }
+
+  function setFiltro(f) {
+    filtroActual = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`filtro-${f}`)?.classList.add('active');
+    renderTabla();
+  }
+
+  function verDetalle(id) {
+    pedidoSeleccionado = pedidos.find(p => p.id == id);
+    if (!pedidoSeleccionado) return;
+    const p = pedidoSeleccionado;
+    document.getElementById('modal-titulo').textContent = `Pedido #${p.id}`;
+    document.getElementById('nuevo-estado').value = p.estado || 'PENDIENTE';
+    document.getElementById('detalle-contenido').innerHTML = `
+      <div class="detail-row"><span class="detail-label">Cliente</span><span class="detail-value">${p.cliente || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${p.email || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">Fecha</span><span class="detail-value">${p.fecha || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">Total</span><span class="detail-value">${parseFloat(p.total||0).toFixed(2)}€</span></div>
+      <div class="detail-row"><span class="detail-label">Estado actual</span><span class="detail-value"><span class="status-badge status-${(p.estado||'').toLowerCase()}">${p.estado||'—'}</span></span></div>
+      ${p.productos ? `<div class="detail-row" style="flex-direction:column;gap:0.5rem;"><span class="detail-label">Productos</span><div>${Array.isArray(p.productos) ? p.productos.map(x=>`<div style="color:var(--text);font-size:0.85rem;padding:0.2rem 0;">• ${x}</div>`).join('') : p.productos}</div></div>` : ''}
+    `;
+    document.getElementById('modal-pedido').classList.add('open');
+  }
+
+  function cerrarModal() { document.getElementById('modal-pedido').classList.remove('open'); }
+
+  async function actualizarEstado() {
+    if (!pedidoSeleccionado) return;
+    const nuevoEstado = document.getElementById('nuevo-estado').value;
+
+    if (MOCK_MODE) {
+      const idx = pedidos.findIndex(p => p.id == pedidoSeleccionado.id);
+      if (idx !== -1) pedidos[idx].estado = nuevoEstado;
+      cerrarModal();
+      renderTabla();
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/pedidos/${pedidoSeleccionado.id}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: nuevoEstado })
+      });
+      if (res.ok) { cerrarModal(); cargarPedidos(); }
+    } catch (err) { console.error('Error actualizando estado:', err); }
+  }
+
+  cargarPedidos();
+</script>
+</body>
+</html>
