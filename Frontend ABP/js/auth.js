@@ -1,17 +1,24 @@
 // ============================================
 // AUTH — SPORT PLUS
 // Funciones de autenticación: login, registro, logout
-// Se conectará a Flask API: http://192.168.125.20:5000/api
+// Se conectará a Flask API: https://divisive-utopia-lilly.ngrok-free.dev/api
 // ============================================
 
 // ——— LOGIN ———
-// Envía email y contraseña a la API y guarda el token si es correcto
+// Envía login y contraseña a la API y guarda los datos de usuario si es correcto
 async function login(email, password) {
     if (MOCK_MODE) {
-        // En modo mock simulamos que cualquier login es correcto
+        const esAdmin = email === "adminadmin@gmail.com" && password === "Admin123";
         localStorage.setItem("token", "mock-token-123");
-        localStorage.setItem("rol", "USER");
-        localStorage.setItem("nombre", email.split("@")[0]); // guardamos el nombre antes del @
+        localStorage.setItem("rol", esAdmin ? "ADMIN" : "USER");
+        localStorage.setItem("nombre", esAdmin ? "Admin" : email.split("@")[0]);
+
+        // Redirigir según rol
+        if (esAdmin) {
+            window.location.href = "../pages/admin/dashboard.html";
+        } else {
+            window.location.href = "../index.html";
+        }
         return { ok: true };
     }
 
@@ -19,16 +26,23 @@ async function login(email, password) {
         const res = await fetch(`${API_BASE_URL}/auth/login`, {
             method: "POST",
             headers: getHeaders(),
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ login: email, password })
         });
         const datos = await res.json();
         if (res.ok) {
-            localStorage.setItem("token", datos.token);
-            localStorage.setItem("rol", datos.rol);
-            localStorage.setItem("nombre", datos.nombre);
+            localStorage.setItem("token", "token-falso-abp-123");
+            localStorage.setItem("rol", datos.usuario.rol_id === 1 ? "ADMIN" : "USER");
+            localStorage.setItem("nombre", datos.usuario.nombre);
+
+            // Redirigir según rol
+            if (datos.usuario.rol_id === 1) {
+                window.location.href = "../pages/admin/dashboard.html";
+            } else {
+                window.location.href = "../index.html";
+            }
             return { ok: true };
         } else {
-            return { ok: false, mensaje: datos.mensaje || "Credenciales incorrectas" };
+            return { ok: false, mensaje: datos.error || "Credenciales incorrectas" };
         }
     } catch (err) {
         console.error("Error login:", err);
@@ -43,6 +57,7 @@ async function registro(nombre, email, password) {
         localStorage.setItem("token", "mock-token-123");
         localStorage.setItem("rol", "USER");
         localStorage.setItem("nombre", nombre);
+        window.location.href = "../index.html";
         return { ok: true };
     }
 
@@ -57,6 +72,7 @@ async function registro(nombre, email, password) {
             localStorage.setItem("token", datos.token);
             localStorage.setItem("rol", datos.rol);
             localStorage.setItem("nombre", datos.nombre);
+            window.location.href = "../index.html";
             return { ok: true };
         } else {
             return { ok: false, mensaje: datos.mensaje || "Error al crear la cuenta" };
