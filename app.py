@@ -3,9 +3,9 @@ import yaml
 from flask import Flask
 from flask_cors import CORS
 from flasgger import Swagger
-from app.model.entidades import db, Categoria, Producto, Usuario, Pedido, LineaPedido, Rol
+from app.model.entidades import db, Deporte, TipoProducto, Producto, Usuario, Pedido, LineaPedido, Rol
 from app.controllers.producto_controller import producto_controller
-from app.controllers.categoria_controller import categoria_controller
+from app.controllers.deporte_controller import deporte_controller
 from app.controllers.usuario_controller import usuario_controller
 from app.controllers.pedido_controller import pedido_controller
 from app.controllers.rol_controller import rol_controller
@@ -38,7 +38,7 @@ swagger = Swagger(app, template=template)
  
 # Registramos los controladores (Blueprints de la API)
 app.register_blueprint(producto_controller)
-app.register_blueprint(categoria_controller)
+app.register_blueprint(deporte_controller)
 app.register_blueprint(usuario_controller)
 app.register_blueprint(pedido_controller)
 app.register_blueprint(rol_controller)
