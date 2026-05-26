@@ -1,0 +1,11 @@
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+.env
+instance/
+.vscode/
+node_modules/
+playwright-report/
+test-results/
