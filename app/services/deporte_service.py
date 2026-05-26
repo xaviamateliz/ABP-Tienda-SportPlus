@@ -1,17 +1,25 @@
-from app.repositories.categoria_repository import CategoriaRepository
-from app.dtos.categoria_dto import CategoriaDTO
-from app.model.entidades import Categoria
+from app.repositories.deporte_repository import DeporteRepository
+from app.dtos.deporte_dto import DeporteDTO
+from app.model.entidades import Deporte
 
-class CategoriaService:
+class DeporteService:
     def __init__(self):
-        self.repository = CategoriaRepository()
+        self.repository = DeporteRepository()
 
-    def listar_categorias(self):
-        categorias = self.repository.obtener_todos()
-        return [CategoriaDTO.to_json(c) for c in categorias]
+    def listar_deportes(self):
+        deportes = self.repository.obtener_todos()
+        return [DeporteDTO.to_json(d) for d in deportes]
 
-    def crear_categoria(self, datos):
-        datos_procesados = CategoriaDTO.from_json(datos)
-        nueva_categoria = Categoria(nombre=datos_procesados.get("nombre"))
-        categoria_guardada = self.repository.guardar(nueva_categoria)
-        return CategoriaDTO.to_json(categoria_guardada)
+    def obtener_deporte(self, deporte_id):
+        deporte = self.repository.obtener_por_id(deporte_id)
+        if deporte:
+            return DeporteDTO.to_json(deporte)
+        return None
+
+    def crear_deporte(self, datos):
+        datos_procesados = DeporteDTO.from_json(datos)
+        nuevo_deporte = Deporte(
+            nombre=datos_procesados.get("nombre")
+        )
+        deporte_guardado = self.repository.guardar(nuevo_deporte)
+        return DeporteDTO.to_json(deporte_guardado)

@@ -1,12 +1,11 @@
-class CategoriaDTO:
-    def to_json(categoria):
+class DeporteDTO:
+    @staticmethod
+    def to_json(deporte):
         return {
-            "id": categoria.categoria_id,
-            "nombre": categoria.nombre
+            "categoria_id": deporte.categoria_id,
+            "nombre": deporte.nombre
         }
 
-# Solo extrae el campo "nombre", ya que el id lo autogenera la bd.
-    def from_json(json_data):
-        return {
-            "nombre": json_data.get("nombre")
-        }
+    @staticmethod
+    def from_json(datos):
+        return datos
