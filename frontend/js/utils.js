@@ -82,7 +82,7 @@ function getParam(nombre) {
     return params.get(nombre);
 }
 
-// Navbar dinámica: muestra "Mi cuenta" o "Entrar" según sesión
+// Navbar dinámica: muestra "Panel Admin" si es admin, "Mi cuenta" si está logueado, o "Entrar"
 function iniciarNavbar() {
     const navUser = document.getElementById("nav-user");
     if (!navUser) return;
