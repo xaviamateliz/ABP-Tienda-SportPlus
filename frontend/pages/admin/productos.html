@@ -101,7 +101,7 @@
   <a href="../../index.html" class="navbar-logo">Sport<span>+</span> <span style="font-size:0.7rem;color:var(--muted);margin-left:0.5rem;letter-spacing:0.15em;">ADMIN</span></a>
   <div class="navbar-actions">
     <span id="admin-nombre" style="font-size:0.85rem;color:var(--muted);"></span>
-    <button class="btn btn-ghost" onclick="logout()">Cerrar sesión</button>
+    <button class="btn btn-ghost" onclick="cerrarSesion()">Cerrar sesión</button>
   </div>
 </nav>
 
@@ -116,7 +116,7 @@
     <a href="pedidos.html" class="sidebar-link"><span class="icon">📦</span> Pedidos</a>
     <div class="sidebar-bottom">
       <a href="../../index.html" class="sidebar-link"><span class="icon">🏠</span> Ver tienda</a>
-      <a href="#" class="sidebar-link" onclick="logout()"><span class="icon">🚪</span> Salir</a>
+      <a href="#" class="sidebar-link" onclick="cerrarSesion()"><span class="icon">🚪</span> Salir</a>
     </div>
   </aside>
 
@@ -172,7 +172,9 @@
       </div>
       <div class="form-group">
         <label class="form-label">Categoría / Deporte</label>
-        <input class="form-input" type="text" id="producto-categoria" placeholder="Ej: Running, Fútbol…" />
+        <select class="form-input" id="producto-categoria">
+          <option value="">Sin categoría</option>
+        </select>
       </div>
       <div class="form-group">
         <label class="form-label">Descripción</label>
@@ -222,30 +224,40 @@
   const nombre = localStorage.getItem('nombre');
   if (nombre) document.getElementById('admin-nombre').textContent = nombre;
 
+  const HEADERS = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
+  };
+
   let productos = [];
   let productoAEliminar = null;
 
   // ——— CARGAR PRODUCTOS ———
   async function cargarProductos() {
-    if (MOCK_MODE) {
-      productos = [
-        { id: 1, nombre: 'Zapatillas Running Pro', categoria: 'Running', precio: 89.90, stock: 24, imagen: '' },
-        { id: 2, nombre: 'Camiseta Técnica', categoria: 'Fútbol', precio: 34.99, stock: 58, imagen: '' },
-        { id: 3, nombre: 'Mochila Trail 20L', categoria: 'Senderismo', precio: 59.00, stock: 12, imagen: '' },
-      ];
-      renderTabla(productos);
-      return;
-    }
     try {
-      const res = await fetch(`${API_BASE_URL}/productos`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
+      const res = await fetch(`${API_BASE_URL}/productos`, { headers: HEADERS });
       if (res.ok) {
         const data = await res.json();
         productos = Array.isArray(data) ? data : data.productos || [];
         renderTabla(productos);
       }
     } catch (err) { console.error('Error cargando productos:', err); }
+  }
+
+  // ——— CARGAR CATEGORÍAS ———
+  async function cargarCategorias() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/categorias`, { headers: HEADERS });
+      const data = await res.json();
+      const lista = Array.isArray(data) ? data : data.categorias || [];
+      const select = document.getElementById('producto-categoria');
+      lista.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.nombre;
+        select.appendChild(opt);
+      });
+    } catch (err) { console.error(err); }
   }
 
   function renderTabla(lista) {
@@ -256,9 +268,9 @@
     }
     tbody.innerHTML = lista.map(p => `
       <tr>
-        <td><div class="product-thumb">${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}">` : '👟'}</div></td>
+        <td><div class="product-thumb">${p.url_producto ? `<img src="${p.url_producto}" alt="${p.nombre}">` : '👟'}</div></td>
         <td><strong>${p.nombre}</strong></td>
-        <td style="color:var(--muted)">${p.categoria || '—'}</td>
+        <td style="color:var(--muted)">${p.categoria?.nombre || p.categoria_id || '—'}</td>
         <td><strong>${parseFloat(p.precio).toFixed(2)}€</strong></td>
         <td style="color:${p.stock < 5 ? 'var(--accent)' : 'inherit'}">${p.stock}</td>
         <td>
@@ -273,14 +285,15 @@
 
   function filtrarProductos() {
     const q = document.getElementById('buscador').value.toLowerCase();
-    renderTabla(productos.filter(p => p.nombre.toLowerCase().includes(q) || (p.categoria||'').toLowerCase().includes(q)));
+    renderTabla(productos.filter(p => p.nombre.toLowerCase().includes(q)));
   }
 
   // ——— MODAL NUEVO ———
   function abrirModalNuevo() {
     document.getElementById('modal-titulo').textContent = 'Nuevo producto';
     document.getElementById('producto-id').value = '';
-    ['nombre','categoria','descripcion','precio','stock','imagen'].forEach(f => document.getElementById(`producto-${f}`).value = '');
+    ['nombre','descripcion','precio','stock','imagen'].forEach(f => document.getElementById(`producto-${f}`).value = '');
+    document.getElementById('producto-categoria').value = '';
     document.getElementById('modal-error').style.display = 'none';
     document.getElementById('modal-producto').classList.add('open');
   }
@@ -292,11 +305,11 @@
     document.getElementById('modal-titulo').textContent = 'Editar producto';
     document.getElementById('producto-id').value = p.id;
     document.getElementById('producto-nombre').value = p.nombre || '';
-    document.getElementById('producto-categoria').value = p.categoria || '';
+    document.getElementById('producto-categoria').value = p.categoria_id || '';
     document.getElementById('producto-descripcion').value = p.descripcion || '';
     document.getElementById('producto-precio').value = p.precio || '';
     document.getElementById('producto-stock').value = p.stock || '';
-    document.getElementById('producto-imagen').value = p.imagen || '';
+    document.getElementById('producto-imagen').value = p.url_producto || '';
     document.getElementById('modal-error').style.display = 'none';
     document.getElementById('modal-producto').classList.add('open');
   }
@@ -306,13 +319,14 @@
   // ——— GUARDAR ———
   async function guardarProducto() {
     const id = document.getElementById('producto-id').value;
+    const catId = document.getElementById('producto-categoria').value;
     const datos = {
       nombre: document.getElementById('producto-nombre').value.trim(),
-      categoria: document.getElementById('producto-categoria').value.trim(),
       descripcion: document.getElementById('producto-descripcion').value.trim(),
       precio: parseFloat(document.getElementById('producto-precio').value),
       stock: parseInt(document.getElementById('producto-stock').value),
-      imagen: document.getElementById('producto-imagen').value.trim(),
+      url_producto: document.getElementById('producto-imagen').value.trim(),
+      ...(catId && { categoria_id: parseInt(catId) })
     };
 
     if (!datos.nombre || isNaN(datos.precio)) {
@@ -322,26 +336,10 @@
       return;
     }
 
-    if (MOCK_MODE) {
-      if (id) {
-        const idx = productos.findIndex(x => x.id == id);
-        if (idx !== -1) productos[idx] = { ...productos[idx], ...datos };
-      } else {
-        productos.push({ id: Date.now(), ...datos });
-      }
-      renderTabla(productos);
-      cerrarModal();
-      return;
-    }
-
     try {
       const method = id ? 'PUT' : 'POST';
       const url = id ? `${API_BASE_URL}/productos/${id}` : `${API_BASE_URL}/productos`;
-      const res = await fetch(url, {
-        method,
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(datos)
-      });
+      const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify(datos) });
       if (res.ok) { cerrarModal(); cargarProductos(); }
       else {
         const err = document.getElementById('modal-error');
@@ -361,21 +359,16 @@
 
   async function eliminarProducto(id) {
     cerrarConfirm();
-    if (MOCK_MODE) {
-      productos = productos.filter(p => p.id != id);
-      renderTabla(productos);
-      return;
-    }
     try {
-      const res = await fetch(`${API_BASE_URL}/productos/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
+      const res = await fetch(`${API_BASE_URL}/productos/${id}`, { method: 'DELETE', headers: HEADERS });
       if (res.ok) cargarProductos();
     } catch (e) { console.error(e); }
   }
 
+  function cerrarSesion() { localStorage.clear(); window.location.href = '../../index.html'; }
+
   cargarProductos();
+  cargarCategorias();
 </script>
 </body>
 </html>
