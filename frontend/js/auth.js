@@ -17,9 +17,10 @@ async function login(email, password) {
 
         if (res.ok) {
             localStorage.setItem("token", "token-falso-abp-123");
-            localStorage.setItem("rol", datos.usuario.rol.id == 1 ? "ADMIN" : "USER"); // == acepta "1" y 1
+            localStorage.setItem("rol", datos.usuario.rol.id == 1 ? "ADMIN" : "USER");
             localStorage.setItem("nombre", datos.usuario.nombre);
-            return { ok: true }; // la redirección la maneja login.html
+            localStorage.setItem("usuario_id", datos.usuario.id);
+            return { ok: true };
         } else {
             return { ok: false, mensaje: datos.error || "Credenciales incorrectas" };
         }
@@ -44,6 +45,7 @@ async function registro(nombre, email, password) {
             localStorage.setItem("token", "token-falso-abp-123");
             localStorage.setItem("rol", datos.usuario.rol.id == 1 ? "ADMIN" : "USER");
             localStorage.setItem("nombre", datos.usuario.nombre);
+            localStorage.setItem("usuario_id", datos.usuario.id);
             return { ok: true };
         } else {
             return { ok: false, mensaje: datos.mensaje || "Error al crear la cuenta" };
