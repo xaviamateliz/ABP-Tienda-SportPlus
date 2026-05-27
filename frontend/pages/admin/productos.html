@@ -209,6 +209,12 @@
         <input class="form-input" type="text" id="inp-descripcion" placeholder="Descripción del producto">
       </div>
       <div class="form-group full">
+        <label class="form-label">Tipo de producto</label>
+        <select class="form-input" id="inp-tipo">
+          <option value="">Sin tipo</option>
+        </select>
+      </div>
+      <div class="form-group full">
         <label class="form-label">URL Imagen</label>
         <input class="form-input" type="text" id="inp-imagen" placeholder="https://...">
       </div>
@@ -271,6 +277,22 @@
     } catch (err) { console.error(err); }
   }
 
+  // ——— CARGAR TIPOS DE PRODUCTO PARA EL SELECTOR ———
+  async function cargarTipos() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/tipos_producto`, { headers: HEADERS });
+      const data = await res.json();
+      const lista = Array.isArray(data) ? data : [];
+      const select = document.getElementById('inp-tipo');
+      lista.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.id_tipo_producto;
+        opt.textContent = t.nombre;
+        select.appendChild(opt);
+      });
+    } catch (err) { console.error(err); }
+  }
+
   // ——— RENDERIZAR TABLA ———
   function renderTabla(productos) {
     if (productos.length === 0) {
@@ -286,7 +308,7 @@
         <tr>
           <td>
             <div class="prod-img">
-              ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}">` : '👟'}
+              ${p.url_producto ? `<img src="${p.url_producto}" alt="${p.nombre}">` : '👟'}
             </div>
           </td>
           <td><strong>${p.nombre}</strong><br><span style="color:var(--muted);font-size:0.8rem;">${p.descripcion ? p.descripcion.substring(0,40)+'...' : ''}</span></td>
@@ -321,6 +343,7 @@
       document.getElementById(`inp-${f}`).value = ''
     );
     document.getElementById('inp-categoria').value = '';
+    document.getElementById('inp-tipo').value = '';
     document.getElementById('modal-msg').style.display = 'none';
     document.getElementById('modal-producto').classList.add('open');
   }
@@ -336,7 +359,8 @@
     document.getElementById('inp-precio').value = p.precio || '';
     document.getElementById('inp-stock').value = p.stock || '';
     document.getElementById('inp-descripcion').value = p.descripcion || '';
-    document.getElementById('inp-imagen').value = p.imagen || '';
+    document.getElementById('inp-imagen').value = p.url_producto || '';
+    document.getElementById('inp-tipo').value = p.id_tipo_producto || '';
     document.getElementById('inp-categoria').value = p.categoria_id || '';
     document.getElementById('modal-msg').style.display = 'none';
     document.getElementById('modal-producto').classList.add('open');
@@ -364,10 +388,12 @@
       return;
     }
 
+    const tipoId = document.getElementById('inp-tipo').value;
     const body = {
       nombre, precio: parseFloat(precio), stock: parseInt(stock),
-      descripcion: desc, imagen,
-      ...(catId && { categoria_id: parseInt(catId) })
+      descripcion: desc, url_producto: imagen,
+      ...(catId && { categoria_id: parseInt(catId) }),
+      ...(tipoId && { id_tipo_producto: parseInt(tipoId) })
     };
 
     try {
@@ -415,6 +441,7 @@
 
   cargarProductos();
   cargarCategorias();
+  cargarTipos();
 </script>
 </body>
 </html>
