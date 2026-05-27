@@ -312,6 +312,129 @@
       }
     }
   </style>
+
+  <style>
+    /* ——— MODAL PAGO ——— */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+      display: none; align-items: center; justify-content: center;
+      z-index: 500; backdrop-filter: blur(6px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-pago {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem; width: 100%;
+      max-width: 460px; display: flex; flex-direction: column; gap: 1.25rem;
+    }
+    .modal-pago-header {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-pago-title {
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 900;
+      text-transform: uppercase; color: var(--white);
+    }
+    .modal-pago-close {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.5rem; cursor: pointer; line-height: 1;
+    }
+    .modal-pago-close:hover { color: var(--white); }
+    .pago-field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .pago-field label {
+      font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    }
+    .pago-field input {
+      background: var(--surface-2); border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm); padding: 0.75rem 1rem;
+      font-family: var(--font-body); font-size: 0.95rem; color: var(--white);
+      outline: none; width: 100%; box-sizing: border-box;
+      transition: border-color var(--transition);
+    }
+    .pago-field input:focus { border-color: var(--accent); }
+    .pago-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .pago-card-icons { display: flex; gap: 0.5rem; align-items: center; }
+    .pago-card-icon {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.2rem 0.5rem;
+      font-size: 0.75rem; color: var(--muted);
+      font-family: var(--font-display); font-weight: 700;
+    }
+    .pago-total {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem; background: var(--surface-2); border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .pago-total-label { font-size: 0.85rem; color: var(--muted); }
+    .pago-total-amount {
+      font-family: var(--font-display); font-size: 1.4rem;
+      font-weight: 900; color: var(--white);
+    }
+    .pago-seguro {
+      font-size: 0.75rem; color: var(--muted); text-align: center;
+    }
+    #pago-msg {
+      font-size: 0.85rem; padding: 0.5rem 0;
+      display: none;
+    }
+  </style>
+
+  <style>
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.82);
+      display: none; align-items: center; justify-content: center;
+      z-index: 500; backdrop-filter: blur(6px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-pago {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem; width: 100%;
+      max-width: 460px; display: flex; flex-direction: column; gap: 1.25rem;
+      margin: 1rem;
+    }
+    .modal-pago-header { display: flex; align-items: center; justify-content: space-between; }
+    .modal-pago-title {
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 900;
+      text-transform: uppercase; color: var(--white);
+    }
+    .modal-pago-close {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.5rem; cursor: pointer; line-height: 1;
+    }
+    .modal-pago-close:hover { color: var(--white); }
+    .pago-field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .pago-field label {
+      font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    }
+    .pago-field input {
+      background: var(--surface-2); border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm); padding: 0.75rem 1rem;
+      font-size: 0.95rem; color: var(--white); outline: none;
+      width: 100%; box-sizing: border-box; transition: border-color var(--transition);
+      font-family: var(--font-body);
+    }
+    .pago-field input:focus { border-color: var(--accent); }
+    .pago-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .pago-card-icons { display: flex; gap: 0.5rem; margin-top: 0.4rem; }
+    .pago-card-icon {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.2rem 0.6rem;
+      font-size: 0.7rem; color: var(--muted);
+      font-family: var(--font-display); font-weight: 700; letter-spacing: 0.05em;
+    }
+    .pago-total {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem; background: var(--surface-2);
+      border-radius: var(--radius-sm); border: 1px solid var(--border);
+    }
+    .pago-total-label { font-size: 0.9rem; color: var(--muted); }
+    .pago-total-amount {
+      font-family: var(--font-display); font-size: 1.5rem;
+      font-weight: 900; color: var(--white);
+    }
+    .pago-seguro { font-size: 0.75rem; color: var(--muted); text-align: center; }
+    #pago-msg { font-size: 0.85rem; color: var(--accent); display: none; padding: 0.25rem 0; }
+  </style>
 </head>
 <body>
 
@@ -537,32 +660,228 @@
         alert("El carrito está vacío");
         return;
       }
+      // Abrir modal de pago
+      const totalModal = carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
+      const envioModal = totalModal >= 50 ? 0 : 4.99;
+      document.getElementById("pago-total-amount").textContent = formatearPrecio(totalModal + envioModal);
+      document.getElementById("modal-pago").classList.add("open");
+      document.getElementById("pago-msg").style.display = "none";
+    }
 
-      const confirmar = confirm("¿Confirmar pedido? (Esto es una simulación)");
+    function cerrarModalPago() {
+      document.getElementById("modal-pago").classList.remove("open");
+      document.getElementById("btn-pagar").textContent = "Pagar ahora";
+      document.getElementById("btn-pagar").disabled = false;
+    }
 
-      if (confirmar) {
-        carrito = [];
-        guardarCarrito();
+    function formatearTarjeta(input) {
+      let v = input.value.replace(/\D/g, "").substring(0, 16);
+      input.value = v.replace(/(\d{4})(?=\d)/g, "$1 ");
+    }
 
-        const contenedor = document.getElementById("cart-content");
-        contenedor.innerHTML = `
-          <div class="cart-empty">
-            <div class="cart-empty-icon">✅</div>
-            <h2>¡Pedido realizado con éxito!</h2>
-            <p>Recibirás un email de confirmación en breve.</p>
-            <p style="color:var(--muted);font-size:0.85rem;margin-top:1rem;">
-              Número de pedido: #SP${Date.now()}
-            </p>
-            <a href="catalogo.html" class="btn btn-primary" style="margin-top:2rem">
-              Seguir comprando
-            </a>
-          </div>
-        `;
+    function formatearFecha(input) {
+      let v = input.value.replace(/\D/g, "").substring(0, 4);
+      if (v.length >= 3) v = v.substring(0,2) + "/" + v.substring(2);
+      input.value = v;
+    }
 
-        document.getElementById("items-count").textContent = "0 productos";
+    function formatearCVV(input) {
+      input.value = input.value.replace(/\D/g, "").substring(0, 4);
+    }
+
+    async function confirmarPago() {
+      const nombre  = document.getElementById("p-nombre").value.trim();
+      const tarjeta = document.getElementById("p-tarjeta").value.replace(/\s/g, "");
+      const fecha   = document.getElementById("p-fecha").value.trim();
+      const cvv     = document.getElementById("p-cvv").value.trim();
+
+      if (!nombre) return mostrarPagoError("Introduce el nombre del titular.");
+      if (tarjeta.length !== 16) return mostrarPagoError("El número de tarjeta debe tener 16 dígitos.");
+      if (!/^\d{2}\/\d{2}$/.test(fecha)) return mostrarPagoError("Fecha no válida. Usa MM/AA.");
+      if (cvv.length < 3) return mostrarPagoError("CVV no válido.");
+
+      const btn = document.getElementById("btn-pagar");
+      btn.textContent = "Procesando...";
+      btn.disabled = true;
+
+      const lineas = carrito.map(item => ({
+        producto_id: item.id,
+        cantidad: item.cantidad,
+        precio: item.precio,
+        talla: item.talla || item.tallaSeleccionada || null
+      }));
+
+      const subtotal = carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
+      const total = subtotal + (subtotal >= 50 ? 0 : 4.99);
+
+      try {
+        const token = localStorage.getItem("token");
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = "Bearer " + token;
+
+        const res = await fetch(API_BASE_URL + "/pedidos", {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify({ lineas: lineas, total: total })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          const numPedido = data.id || data.pedido_id || Date.now();
+          carrito = [];
+          guardarCarrito();
+          cerrarModalPago();
+
+          document.getElementById("cart-content").innerHTML = `
+            <div class="cart-empty">
+              <div class="cart-empty-icon">✅</div>
+              <h2>¡Pedido realizado!</h2>
+              <p>Tu pedido ha sido registrado correctamente.</p>
+              <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;">
+                Número de pedido: <strong style="color:var(--white)">#SP${numPedido}</strong>
+              </p>
+              <a href="catalogo.html" class="btn btn-primary" style="margin-top:2rem">
+                Seguir comprando
+              </a>
+            </div>
+          `;
+          document.getElementById("items-count").textContent = "0 productos";
+        } else {
+          mostrarPagoError(data.error || "Error al procesar el pedido.");
+          btn.textContent = "Pagar ahora";
+          btn.disabled = false;
+        }
+      } catch (err) {
+        mostrarPagoError("Error de conexión con el servidor.");
+        btn.textContent = "Pagar ahora";
+        btn.disabled = false;
       }
     }
 
+    function mostrarPagoError(msg) {
+      const el = document.getElementById("pago-msg");
+      el.textContent = "⚠ " + msg;
+      el.style.display = "block";
+    }
   </script>
+
+  <!-- ============ MODAL PAGO ============ -->
+  <div class="modal-overlay" id="modal-pago">
+    <div class="modal-pago">
+
+      <div class="modal-pago-header">
+        <span class="modal-pago-title">💳 Pago</span>
+        <button class="modal-pago-close" onclick="cerrarModalPago()">×</button>
+      </div>
+
+      <!-- Total a pagar -->
+      <div class="pago-total" id="pago-resumen">
+        <span class="pago-total-label">Total a pagar</span>
+        <span class="pago-total-amount" id="pago-total-amount">—</span>
+      </div>
+
+      <!-- Nombre titular -->
+      <div class="pago-field">
+        <label>Nombre del titular</label>
+        <input type="text" id="p-nombre" placeholder="JUAN GARCIA LOPEZ" maxlength="40"
+          oninput="this.value = this.value.toUpperCase()">
+      </div>
+
+      <!-- Número de tarjeta -->
+      <div class="pago-field">
+        <label>Número de tarjeta</label>
+        <input type="text" id="p-tarjeta" placeholder="0000 0000 0000 0000"
+          oninput="formatearTarjeta(this)" maxlength="19" inputmode="numeric">
+        <div class="pago-card-icons" style="margin-top:0.4rem;">
+          <span class="pago-card-icon">VISA</span>
+          <span class="pago-card-icon">MC</span>
+          <span class="pago-card-icon">AMEX</span>
+        </div>
+      </div>
+
+      <!-- Fecha y CVV -->
+      <div class="pago-row">
+        <div class="pago-field">
+          <label>Fecha de expiración</label>
+          <input type="text" id="p-fecha" placeholder="MM/AA" maxlength="5"
+            oninput="formatearFecha(this)" inputmode="numeric">
+        </div>
+        <div class="pago-field">
+          <label>CVV</label>
+          <input type="text" id="p-cvv" placeholder="123" maxlength="4"
+            oninput="formatearCVV(this)" inputmode="numeric">
+        </div>
+      </div>
+
+      <p id="pago-msg"></p>
+
+      <button class="btn btn-primary" id="btn-pagar"
+        style="width:100%;justify-content:center;padding:1rem;font-size:1rem;"
+        onclick="confirmarPago()">
+        Pagar ahora
+      </button>
+
+      <p class="pago-seguro">🔒 Pago simulado · No se realizará ningún cargo real</p>
+    </div>
+  </div>
+
+
+  <!-- ============ MODAL PAGO ============ -->
+  <div class="modal-overlay" id="modal-pago">
+    <div class="modal-pago">
+
+      <div class="modal-pago-header">
+        <span class="modal-pago-title">💳 Datos de pago</span>
+        <button class="modal-pago-close" onclick="cerrarModalPago()">×</button>
+      </div>
+
+      <div class="pago-total">
+        <span class="pago-total-label">Total a pagar</span>
+        <span class="pago-total-amount" id="pago-total-amount">—</span>
+      </div>
+
+      <div class="pago-field">
+        <label>Nombre del titular</label>
+        <input type="text" id="p-nombre" placeholder="JUAN GARCIA LOPEZ" maxlength="40"
+          oninput="this.value = this.value.toUpperCase()">
+      </div>
+
+      <div class="pago-field">
+        <label>Número de tarjeta</label>
+        <input type="text" id="p-tarjeta" placeholder="0000 0000 0000 0000"
+          oninput="formatearTarjeta(this)" maxlength="19" inputmode="numeric">
+        <div class="pago-card-icons">
+          <span class="pago-card-icon">VISA</span>
+          <span class="pago-card-icon">MC</span>
+          <span class="pago-card-icon">AMEX</span>
+        </div>
+      </div>
+
+      <div class="pago-row">
+        <div class="pago-field">
+          <label>Caducidad</label>
+          <input type="text" id="p-fecha" placeholder="MM/AA" maxlength="5"
+            oninput="formatearFecha(this)" inputmode="numeric">
+        </div>
+        <div class="pago-field">
+          <label>CVV</label>
+          <input type="text" id="p-cvv" placeholder="123" maxlength="4"
+            oninput="formatearCVV(this)" inputmode="numeric">
+        </div>
+      </div>
+
+      <p id="pago-msg"></p>
+
+      <button class="btn btn-primary" id="btn-pagar"
+        style="width:100%;justify-content:center;padding:1rem;font-size:1rem;"
+        onclick="confirmarPago()">
+        Pagar ahora
+      </button>
+
+      <p class="pago-seguro">🔒 Pago simulado · No se realizará ningún cargo real</p>
+    </div>
+  </div>
+
 </body>
 </html>
