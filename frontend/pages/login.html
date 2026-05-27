@@ -524,7 +524,7 @@
         setTimeout(() => {
           const rol = localStorage.getItem('rol');
           if (rol === 'ADMIN') {
-            window.location.href = '../pages/admin/dashboard.html';
+            window.location.href = 'admin/dashboard.html';
           } else {
             const redirect = new URLSearchParams(window.location.search).get('redirect');
             window.location.href = redirect || '../index.html';
