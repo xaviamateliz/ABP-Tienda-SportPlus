@@ -268,9 +268,17 @@
     }
     tbody.innerHTML = lista.map(p => `
       <tr>
-        <td><div class="product-thumb">${p.url_producto ? `<img src="${p.url_producto}" alt="${p.nombre}">` : '👟'}</div></td>
+        <td>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.3rem;">
+        <div class="product-thumb">${p.url_producto ? `<img src="${p.url_producto}" alt="${p.nombre}">` : '👟'}</div>
+        <span style="font-size:0.65rem;color:var(--muted-2);text-transform:uppercase;letter-spacing:0.05em;">${p.tipo_producto || ''}</span>
+        </div>
+        </td>
         <td><strong>${p.nombre}</strong></td>
-        <td style="color:var(--muted)">${p.categoria?.nombre || p.categoria_id || '—'}</td>
+        <td style="color:var(--muted)">
+          ${p.categoria?.nombre || '—'}<br>
+        <span style="font-size:0.75rem;color:var(--muted-2)">${p.id_tipo_producto ? 'Tipo: ' + p.id_tipo_producto : ''}</span>
+        </td>
         <td><strong>${parseFloat(p.precio).toFixed(2)}€</strong></td>
         <td style="color:${p.stock < 5 ? 'var(--accent)' : 'inherit'}">${p.stock}</td>
         <td>
