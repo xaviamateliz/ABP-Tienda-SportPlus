@@ -1,12 +1,12 @@
 // ============================================
-// PRODUCTOS � SPORT PLUS
-// Conectado a Flask API: http://192.168.125.20:5000/api
+// PRODUCTOS — SPORT PLUS
+// Conectado a Flask API
 // ============================================
 
-// ��� PAGINACI�N ���
-const PRODUCTOS_POR_PAGINA = 20; 
-let _paginaActual = 1;          
-let _productosActuales = [];    
+// ——— PAGINACIÓN ———
+const PRODUCTOS_POR_PAGINA = 20;
+let _paginaActual = 1;
+let _productosActuales = [];
 
 function iniciarPaginacion(productos) {
     _productosActuales = productos;
@@ -25,22 +25,22 @@ function hayMasProductos() {
     return _paginaActual * PRODUCTOS_POR_PAGINA < _productosActuales.length;
 }
 
-// ��� OBTENER PRODUCTOS ���
-async function fetchProductos(filtros = {}) {
+// ——— OBTENER PRODUCTOS ———
+async function fetchProductos() {
     try {
-        const params = new URLSearchParams(filtros).toString();
-        const res = await fetch(`${API_BASE_URL}/productos?${params}`, {
+        const res = await fetch(`${API_BASE_URL}/productos`, {
             headers: getHeaders()
         });
         if (!res.ok) throw new Error("Error al cargar productos");
-        return await res.json();
+        const data = await res.json();
+        return Array.isArray(data) ? data : (data.productos || []);
     } catch (err) {
         console.error("Error fetchProductos:", err);
         return [];
     }
 }
 
-// ��� OBTENER PRODUCTO POR ID ���
+// ——— OBTENER PRODUCTO POR ID ———
 async function fetchProductoPorId(id) {
     try {
         const res = await fetch(`${API_BASE_URL}/productos/${id}`, {
@@ -54,7 +54,7 @@ async function fetchProductoPorId(id) {
     }
 }
 
-// ��� CREAR PRODUCTO (admin) ���
+// ——— CREAR PRODUCTO (admin) ———
 async function crearProducto(datos) {
     try {
         const urlFinal = datos.url_producto || datos.imagen || datos.imagen_url || datos.url || "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=500";
@@ -62,10 +62,10 @@ async function crearProducto(datos) {
         const datosAdaptados = {
             nombre: datos.nombre,
             descripcion: datos.descripcion,
-            precio: parseFloat(datos.precio), 
-            stock: parseInt(datos.stock),     
+            precio: parseFloat(datos.precio),
+            stock: parseInt(datos.stock),
             categoria_id: datos.categoria_id ? parseInt(datos.categoria_id) : 1,
-            url_producto: urlFinal 
+            url_producto: urlFinal
         };
 
         const res = await fetch(`${API_BASE_URL}/productos`, {
@@ -80,7 +80,7 @@ async function crearProducto(datos) {
     }
 }
 
-// ��� EDITAR PRODUCTO (admin) ���
+// ——— EDITAR PRODUCTO (admin) ———
 async function editarProducto(id, datos) {
     try {
         const urlFinal = datos.url_producto || datos.imagen || datos.imagen_url || datos.url || "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=500";
@@ -106,7 +106,7 @@ async function editarProducto(id, datos) {
     }
 }
 
-// ��� ELIMINAR PRODUCTO (admin) ���
+// ——— ELIMINAR PRODUCTO (admin) ———
 async function eliminarProducto(id) {
     try {
         const res = await fetch(`${API_BASE_URL}/productos/${id}`, {
@@ -120,15 +120,13 @@ async function eliminarProducto(id) {
     }
 }
 
-// ��� RENDERIZAR TARJETA DE PRODUCTO ���
+// ——— RENDERIZAR TARJETA DE PRODUCTO ———
 function renderizarTarjeta(producto) {
-    // Extraer y limpiar las comillas de la URL de la imagen que env�a la API
-    let urlImagen = producto.imagen || producto.url_producto || '';
+    let urlImagen = producto.url_producto || producto.imagen || '';
     if (typeof urlImagen === 'string') {
         urlImagen = urlImagen.replace(/%22/g, '').replace(/"/g, '').trim();
     }
-    
-    // Si no hay URL, se usa la imagen por defecto
+
     if (!urlImagen) {
         urlImagen = "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=500";
     }
@@ -140,7 +138,7 @@ function renderizarTarjeta(producto) {
                 ${producto.badge ? `<span class="product-badge">${producto.badge}</span>` : ""}
             </div>
             <div class="product-card-body">
-                <p class="product-card-sport">${producto.categoria?.nombre || producto.deporte || 'Sport Plus'}</p>
+                <p class="product-card-sport">${producto.categoria?.nombre || 'Sport Plus'}</p>
                 <h3 class="product-card-name">${producto.nombre}</h3>
                 <p class="product-card-sub">${producto.descripcion ? producto.descripcion.substring(0, 60) : ''}...</p>
                 <div class="product-card-footer">
@@ -154,44 +152,43 @@ function renderizarTarjeta(producto) {
     `;
 }
 
-// ��� GESTI�N DEL CARRITO (Unificada) ���
+// ——— GESTIÓN DEL CARRITO ———
 function agregarAlCarrito(idProducto, talla = null) {
     const esPaginaInterior = window.location.pathname.includes('/pages/');
 
     if (!talla) {
-        const rutaProducto = esPaginaInterior 
-            ? `producto.html?id=${idProducto}` 
+        const rutaProducto = esPaginaInterior
+            ? `producto.html?id=${idProducto}`
             : `pages/producto.html?id=${idProducto}`;
         window.location.href = rutaProducto;
-        return; 
+        return;
     }
 
     let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     const existente = carrito.find(p => p.id === idProducto && p.tallaSeleccionada === talla);
-    
+
     if (existente) {
         existente.cantidad += 1;
     } else {
-        // Al no haber Mock, se busca dentro del array de productos cargados actualmente por la API
         const productoBase = _productosActuales.find(p => p.id === idProducto);
         if (productoBase) {
             carrito.push({ ...productoBase, cantidad: 1, tallaSeleccionada: talla });
         }
     }
-    
+
     localStorage.setItem("carrito", JSON.stringify(carrito));
-    
+
     if (typeof actualizarContadorCarrito === "function") {
         actualizarContadorCarrito();
     } else {
         const badge = document.getElementById('cart-count');
         if (badge) badge.textContent = carrito.length;
     }
-    
+
     const btns = document.querySelectorAll(`[onclick*="agregarAlCarrito(${idProducto}"]`);
     btns.forEach(btn => {
         const textoOriginal = btn.textContent;
-        btn.textContent = "? A�adido";
+        btn.textContent = "✓ Añadido";
         btn.style.background = "#44ff88";
         btn.style.color = "#000";
         setTimeout(() => {

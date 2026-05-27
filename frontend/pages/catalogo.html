@@ -242,7 +242,7 @@
     }
 
     #btn-cargar-mas {
-      display: none; /* se muestra con JS solo si hay más */
+      display: none;
       padding: 0.9rem 3rem;
       font-size: 1rem;
     }
@@ -285,10 +285,10 @@
     <a href="../index.html" class="navbar-logo">Sport<span>+</span></a>
     <ul class="navbar-links">
       <li><a href="catalogo.html" class="active">Catálogo</a></li>
-      <li><a href="catalogo.html?deporte=futbol">Fútbol</a></li>
-      <li><a href="catalogo.html?deporte=running">Running</a></li>
-      <li><a href="catalogo.html?deporte=gym">Gym</a></li>
-      <li><a href="catalogo.html?deporte=baloncesto">Baloncesto</a></li>
+      <li><a href="catalogo.html?deporte=Futbol">Fútbol</a></li>
+      <li><a href="catalogo.html?deporte=Running">Running</a></li>
+      <li><a href="catalogo.html?deporte=Gym">Gym</a></li>
+      <li><a href="catalogo.html?deporte=Baloncesto">Baloncesto</a></li>
     </ul>
     <div class="navbar-actions">
       <div id="nav-user"></div>
@@ -323,19 +323,19 @@
               <input type="radio" name="deporte" value="todos" checked onchange="aplicarFiltros()"> Todos
             </label>
             <label class="filter-option">
-              <input type="radio" name="deporte" value="futbol" onchange="aplicarFiltros()"> ⚽ Fútbol
+              <input type="radio" name="deporte" value="Futbol" onchange="aplicarFiltros()"> ⚽ Fútbol
             </label>
             <label class="filter-option">
-              <input type="radio" name="deporte" value="running" onchange="aplicarFiltros()"> 🏃 Running
+              <input type="radio" name="deporte" value="Running" onchange="aplicarFiltros()"> 🏃 Running
             </label>
             <label class="filter-option">
-              <input type="radio" name="deporte" value="gym" onchange="aplicarFiltros()"> 💪 Gym
+              <input type="radio" name="deporte" value="Gym" onchange="aplicarFiltros()"> 💪 Gym
             </label>
             <label class="filter-option">
-              <input type="radio" name="deporte" value="baloncesto" onchange="aplicarFiltros()"> 🏀 Baloncesto
+              <input type="radio" name="deporte" value="Baloncesto" onchange="aplicarFiltros()"> 🏀 Baloncesto
             </label>
             <label class="filter-option">
-              <input type="radio" name="deporte" value="tenis" onchange="aplicarFiltros()"> 🎾 Tenis
+              <input type="radio" name="deporte" value="Tenis" onchange="aplicarFiltros()"> 🎾 Tenis
             </label>
           </div>
         </div>
@@ -345,19 +345,19 @@
           <span class="filter-group-label">Categoría</span>
           <div class="filter-options">
             <label class="filter-option">
-              <input type="checkbox" value="camisetas" onchange="aplicarFiltros()"> Camisetas
+              <input type="checkbox" value="1" onchange="aplicarFiltros()"> Camisetas
             </label>
             <label class="filter-option">
-              <input type="checkbox" value="pantalones" onchange="aplicarFiltros()"> Pantalones
+              <input type="checkbox" value="2" onchange="aplicarFiltros()"> Pantalones
             </label>
             <label class="filter-option">
-              <input type="checkbox" value="sudaderas" onchange="aplicarFiltros()"> Sudaderas
+              <input type="checkbox" value="3" onchange="aplicarFiltros()"> Sudaderas
             </label>
             <label class="filter-option">
-              <input type="checkbox" value="chaquetas" onchange="aplicarFiltros()"> Chaquetas
+              <input type="checkbox" value="4" onchange="aplicarFiltros()"> Chaquetas
             </label>
             <label class="filter-option">
-              <input type="checkbox" value="zapatillas" onchange="aplicarFiltros()"> Zapatillas
+              <input type="checkbox" value="5" onchange="aplicarFiltros()"> Zapatillas
             </label>
           </div>
         </div>
@@ -439,7 +439,6 @@
   <script src="../js/utils.js"></script>
   <script src="../js/productos.js"></script>
   <script>
-    // ——— Estado de filtros ———
     let filtrosActivos = {
       deporte: "todos",
       categorias: [],
@@ -448,7 +447,8 @@
       orden: "default"
     };
 
-    // ——— Iniciar página ———
+    let todosLosProductos = [];
+
     document.addEventListener("DOMContentLoaded", async () => {
       iniciarNavbar();
 
@@ -460,24 +460,54 @@
         if (radio) radio.checked = true;
       }
 
-      await cargarCatalogo();
+      // Cargar todos los productos una sola vez
+      const data = await fetchProductos();
+      todosLosProductos = Array.isArray(data) ? data : (data.productos || []);
+
+      aplicarFiltros();
     });
 
-    // ——— Cargar y renderizar productos (primera vez / al filtrar) ———
+    function aplicarFiltros() {
+      const deporteSeleccionado = document.querySelector('input[name="deporte"]:checked');
+      filtrosActivos.deporte = deporteSeleccionado ? deporteSeleccionado.value : "todos";
+
+      const categoriasChecked = document.querySelectorAll('input[type="checkbox"]:checked');
+      filtrosActivos.categorias = Array.from(categoriasChecked).map(c => parseInt(c.value));
+
+      filtrosActivos.precioMax = parseInt(document.getElementById("precio-range").value);
+      filtrosActivos.busqueda  = document.getElementById("buscador").value.trim().toLowerCase();
+      filtrosActivos.orden     = document.getElementById("ordenar").value;
+
+      cargarCatalogo();
+    }
+
     async function cargarCatalogo() {
       const grid = document.getElementById("grid-productos");
       grid.innerHTML = `<div class="state-box"><span>⏳</span><p>Cargando...</p></div>`;
 
-      let productos = await fetchProductos({
-        deporte: filtrosActivos.deporte,
-        precioMax: filtrosActivos.precioMax,
-        busqueda: filtrosActivos.busqueda
-      });
+      let productos = [...todosLosProductos];
 
-      // Filtro de categorías (cliente)
+      // Filtro deporte en cliente (compara con categoria.nombre)
+      if (filtrosActivos.deporte !== "todos") {
+        productos = productos.filter(p =>
+          p.categoria?.nombre?.toLowerCase() === filtrosActivos.deporte.toLowerCase()
+        );
+      }
+
+      // Filtro tipo producto por id_tipo_producto
       if (filtrosActivos.categorias.length > 0) {
         productos = productos.filter(p =>
-        filtrosActivos.categorias.includes(p.categoria?.nombre?.toLowerCase())
+          filtrosActivos.categorias.includes(p.id_tipo_producto)
+        );
+      }
+
+      // Filtro precio
+      productos = productos.filter(p => parseFloat(p.precio) <= filtrosActivos.precioMax);
+
+      // Filtro búsqueda
+      if (filtrosActivos.busqueda) {
+        productos = productos.filter(p =>
+          p.nombre.toLowerCase().includes(filtrosActivos.busqueda)
         );
       }
 
@@ -488,17 +518,11 @@
         case "nombre":      productos.sort((a, b) => a.nombre.localeCompare(b.nombre)); break;
       }
 
-      // Iniciar paginación
       const primera = iniciarPaginacion(productos);
-
       document.getElementById("num-resultados").textContent = productos.length;
 
       if (productos.length === 0) {
-        grid.innerHTML = `
-          <div class="state-box">
-            <span>🔍</span>
-            <p>No hay productos con estos filtros</p>
-          </div>`;
+        grid.innerHTML = `<div class="state-box"><span>🔍</span><p>No hay productos con estos filtros</p></div>`;
         ocultarBotonCargarMas();
         return;
       }
@@ -507,42 +531,28 @@
       actualizarUI();
     }
 
-    // ——— Cargar más: añade la siguiente tanda al grid ———
     async function cargarMas() {
       const btn = document.getElementById("btn-cargar-mas");
       btn.textContent = "Cargando...";
       btn.disabled = true;
-
-      // Pequeña pausa para simular carga (quitar cuando haya API real)
       await new Promise(r => setTimeout(r, 400));
-
       const siguientes = cargarSiguientePagina();
       const grid = document.getElementById("grid-productos");
       grid.insertAdjacentHTML("beforeend", siguientes.map(renderizarTarjeta).join(""));
-
       btn.textContent = "Cargar más productos";
       btn.disabled = false;
-
       actualizarUI();
     }
 
-    // ——— Actualiza contador, barra de progreso y visibilidad del botón ———
     function actualizarUI() {
       const total    = _productosActuales.length;
       const visibles = Math.min(_paginaActual * PRODUCTOS_POR_PAGINA, total);
       const pct      = total > 0 ? Math.round((visibles / total) * 100) : 0;
-
       document.getElementById("num-visibles").textContent = visibles;
       document.getElementById("progress-fill").style.width = pct + "%";
-      document.getElementById("load-more-info").textContent =
-        `${visibles} de ${total} productos`;
-
+      document.getElementById("load-more-info").textContent = `${visibles} de ${total} productos`;
       const btn = document.getElementById("btn-cargar-mas");
-      if (hayMasProductos()) {
-        btn.classList.add("visible");
-      } else {
-        btn.classList.remove("visible");
-      }
+      hayMasProductos() ? btn.classList.add("visible") : btn.classList.remove("visible");
     }
 
     function ocultarBotonCargarMas() {
@@ -552,28 +562,11 @@
       document.getElementById("num-visibles").textContent = "0";
     }
 
-    // ——— Aplicar filtros al cambiar cualquier control ———
-    function aplicarFiltros() {
-      const deporteSeleccionado = document.querySelector('input[name="deporte"]:checked');
-      filtrosActivos.deporte = deporteSeleccionado ? deporteSeleccionado.value : "todos";
-
-      const categoriasChecked = document.querySelectorAll('input[type="checkbox"]:checked');
-      filtrosActivos.categorias = Array.from(categoriasChecked).map(c => c.value);
-
-      filtrosActivos.precioMax = parseInt(document.getElementById("precio-range").value);
-      filtrosActivos.busqueda  = document.getElementById("buscador").value.trim();
-      filtrosActivos.orden     = document.getElementById("ordenar").value;
-
-      cargarCatalogo();
-    }
-
-    // ——— Actualizar label de precio ———
     function actualizarPrecio(valor) {
       document.getElementById("precio-valor").textContent = valor + "€";
       aplicarFiltros();
     }
 
-    // ——— Limpiar todos los filtros ———
     function resetFiltros() {
       document.querySelector('input[name="deporte"][value="todos"]').checked = true;
       document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
@@ -581,7 +574,6 @@
       document.getElementById("precio-valor").textContent = "200€";
       document.getElementById("buscador").value = "";
       document.getElementById("ordenar").value = "default";
-
       filtrosActivos = { deporte: "todos", categorias: [], precioMax: 200, busqueda: "", orden: "default" };
       cargarCatalogo();
     }
