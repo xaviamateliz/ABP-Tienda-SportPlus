@@ -1,9 +1,9 @@
 // ============================================
-// PRODUCTOS — SPORT PLUS
+// PRODUCTOS ï¿½ SPORT PLUS
 // Conectado a Flask API: http://192.168.125.20:5000/api
 // ============================================
 
-// ——— PAGINACIÓN ———
+// ï¿½ï¿½ï¿½ PAGINACIï¿½N ï¿½ï¿½ï¿½
 const PRODUCTOS_POR_PAGINA = 20; 
 let _paginaActual = 1;          
 let _productosActuales = [];    
@@ -25,7 +25,7 @@ function hayMasProductos() {
     return _paginaActual * PRODUCTOS_POR_PAGINA < _productosActuales.length;
 }
 
-// ——— OBTENER PRODUCTOS ———
+// ï¿½ï¿½ï¿½ OBTENER PRODUCTOS ï¿½ï¿½ï¿½
 async function fetchProductos(filtros = {}) {
     try {
         const params = new URLSearchParams(filtros).toString();
@@ -40,7 +40,7 @@ async function fetchProductos(filtros = {}) {
     }
 }
 
-// ——— OBTENER PRODUCTO POR ID ———
+// ï¿½ï¿½ï¿½ OBTENER PRODUCTO POR ID ï¿½ï¿½ï¿½
 async function fetchProductoPorId(id) {
     try {
         const res = await fetch(`${API_BASE_URL}/productos/${id}`, {
@@ -54,7 +54,7 @@ async function fetchProductoPorId(id) {
     }
 }
 
-// ——— CREAR PRODUCTO (admin) ———
+// ï¿½ï¿½ï¿½ CREAR PRODUCTO (admin) ï¿½ï¿½ï¿½
 async function crearProducto(datos) {
     try {
         const urlFinal = datos.url_producto || datos.imagen || datos.imagen_url || datos.url || "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=500";
@@ -80,7 +80,7 @@ async function crearProducto(datos) {
     }
 }
 
-// ——— EDITAR PRODUCTO (admin) ———
+// ï¿½ï¿½ï¿½ EDITAR PRODUCTO (admin) ï¿½ï¿½ï¿½
 async function editarProducto(id, datos) {
     try {
         const urlFinal = datos.url_producto || datos.imagen || datos.imagen_url || datos.url || "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=500";
@@ -106,7 +106,7 @@ async function editarProducto(id, datos) {
     }
 }
 
-// ——— ELIMINAR PRODUCTO (admin) ———
+// ï¿½ï¿½ï¿½ ELIMINAR PRODUCTO (admin) ï¿½ï¿½ï¿½
 async function eliminarProducto(id) {
     try {
         const res = await fetch(`${API_BASE_URL}/productos/${id}`, {
@@ -120,9 +120,9 @@ async function eliminarProducto(id) {
     }
 }
 
-// ——— RENDERIZAR TARJETA DE PRODUCTO ———
+// ï¿½ï¿½ï¿½ RENDERIZAR TARJETA DE PRODUCTO ï¿½ï¿½ï¿½
 function renderizarTarjeta(producto) {
-    // Extraer y limpiar las comillas de la URL de la imagen que envía la API
+    // Extraer y limpiar las comillas de la URL de la imagen que envï¿½a la API
     let urlImagen = producto.imagen || producto.url_producto || '';
     if (typeof urlImagen === 'string') {
         urlImagen = urlImagen.replace(/%22/g, '').replace(/"/g, '').trim();
@@ -140,7 +140,7 @@ function renderizarTarjeta(producto) {
                 ${producto.badge ? `<span class="product-badge">${producto.badge}</span>` : ""}
             </div>
             <div class="product-card-body">
-                <p class="product-card-sport">${producto.deporte || 'Sport'}</p>
+                <p class="product-card-sport">${producto.categoria?.nombre || producto.deporte || 'Sport Plus'}</p>
                 <h3 class="product-card-name">${producto.nombre}</h3>
                 <p class="product-card-sub">${producto.descripcion ? producto.descripcion.substring(0, 60) : ''}...</p>
                 <div class="product-card-footer">
@@ -154,7 +154,7 @@ function renderizarTarjeta(producto) {
     `;
 }
 
-// ——— GESTIÓN DEL CARRITO (Unificada) ———
+// ï¿½ï¿½ï¿½ GESTIï¿½N DEL CARRITO (Unificada) ï¿½ï¿½ï¿½
 function agregarAlCarrito(idProducto, talla = null) {
     const esPaginaInterior = window.location.pathname.includes('/pages/');
 
@@ -191,7 +191,7 @@ function agregarAlCarrito(idProducto, talla = null) {
     const btns = document.querySelectorAll(`[onclick*="agregarAlCarrito(${idProducto}"]`);
     btns.forEach(btn => {
         const textoOriginal = btn.textContent;
-        btn.textContent = "? Añadido";
+        btn.textContent = "? Aï¿½adido";
         btn.style.background = "#44ff88";
         btn.style.color = "#000";
         setTimeout(() => {
