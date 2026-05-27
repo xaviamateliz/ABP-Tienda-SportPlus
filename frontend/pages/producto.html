@@ -344,6 +344,7 @@
     // Empieza vacía y se rellena cuando hace clic en una talla
     // ─────────────────────────────────────────────
     let tallaSeleccionada = "";
+    let productoActual = null;  // Variable global para guardar el producto cargado
 
     // ─────────────────────────────────────────────
     // AL CARGAR LA PÁGINA ejecutamos la función principal
@@ -373,6 +374,9 @@
         mostrarEstadoError("Producto no encontrado.");
         return;
       }
+
+      // Guardamos el producto en la variable global para usarla en handleAgregarCarrito
+      productoActual = producto;
 
       // Si todo va bien, pintamos la página con los datos del producto
       renderizarPagina(producto);
