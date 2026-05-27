@@ -476,7 +476,9 @@
 
       // Filtro de categorías (cliente)
       if (filtrosActivos.categorias.length > 0) {
-        productos = productos.filter(p => filtrosActivos.categorias.includes(p.categoria));
+        productos = productos.filter(p =>
+        filtrosActivos.categorias.includes(p.categoria?.nombre?.toLowerCase())
+        );
       }
 
       // Ordenar
