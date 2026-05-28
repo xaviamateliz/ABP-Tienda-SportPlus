@@ -2,13 +2,13 @@ openapi: 3.0.0
 info:
   title: API Tienda de Productos - ABP
   version: 1.0.0
-  description: Especificación completa de rutas para el MVP de la tienda de productos.
+  description: EspecificaciÃ³n completa de rutas para el MVP de la tienda de productos.
 paths:
   /api/auth/login:
     post:
       tags:
-        - Autenticación
-      summary: Iniciar sesión de usuario
+        - AutenticaciÃ³n
+      summary: Iniciar sesiÃ³n de usuario
       requestBody:
         required: true
         content:
@@ -22,10 +22,10 @@ paths:
                   type: string
       responses:
         '200':
-          description: Autenticación exitosa y retorno de sesión/token
+          description: AutenticaciÃ³n exitosa y retorno de sesiÃ³n/token
         '401':
           description: Credenciales incorrectas
-
+ 
   /api/usuarios:
     get:
       tags:
@@ -36,7 +36,7 @@ paths:
           description: Lista de usuarios recuperada
     post:
       tags:
-        - Autenticación
+        - AutenticaciÃ³n
       summary: Registrar un nuevo usuario del sistema
       requestBody:
         required: true
@@ -71,8 +71,8 @@ paths:
         '201':
           description: Usuario registrado correctamente
         '400':
-          description: Error en la validación de los datos entregados
-
+          description: Error en la validaciÃ³n de los datos entregados
+ 
   /api/usuarios/{id}:
     get:
       tags:
@@ -89,19 +89,19 @@ paths:
           description: Datos del usuario encontrados
         '404':
           description: El usuario solicitado no existe
-
+ 
   /api/productos:
     get:
       tags:
         - Productos
-      summary: Listar todo el catálogo de productos
+      summary: Listar todo el catÃ¡logo de productos
       responses:
         '200':
           description: Lista de productos obtenida
     post:
       tags:
         - Productos
-      summary: Crear un nuevo producto en el catálogo
+      summary: Crear un nuevo producto en el catÃ¡logo
       requestBody:
         required: true
         content:
@@ -127,15 +127,15 @@ paths:
                   format: uri
       responses:
         '201':
-          description: Producto añadido con éxito
+          description: Producto aÃ±adido con Ã©xito
         '400':
-          description: Parámetros obligatorios faltantes
-
+          description: ParÃ¡metros obligatorios faltantes
+ 
   /api/productos/{id}:
     get:
       tags:
         - Productos
-      summary: Obtener la información de un producto específico
+      summary: Obtener la informaciÃ³n de un producto especÃ­fico
       parameters:
         - name: id
           in: path
@@ -150,7 +150,7 @@ paths:
     put:
       tags:
         - Productos
-      summary: Actualizar la información o stock de un producto
+      summary: Actualizar la informaciÃ³n o stock de un producto
       parameters:
         - name: id
           in: path
@@ -197,10 +197,10 @@ paths:
             type: integer
       responses:
         '204':
-          description: Producto eliminado con éxito
+          description: Producto eliminado con Ã©xito
         '404':
           description: El producto no existe
-
+ 
   /api/deportes:
     get:
       tags:
@@ -224,8 +224,8 @@ paths:
                   type: string
       responses:
         '201':
-          description: Deporte creado con éxito
-
+          description: Deporte creado con Ã©xito
+ 
   /api/tipos_producto:
     get:
       tags:
@@ -249,20 +249,20 @@ paths:
                   type: string
       responses:
         '201':
-          description: Tipo de producto creado con éxito
-
+          description: Tipo de producto creado con Ã©xito
+ 
   /api/pedidos:
     get:
       tags:
         - Pedidos
-      summary: Obtener el histórico de todos los pedidos realizados
+      summary: Obtener el histÃ³rico de todos los pedidos realizados
       responses:
         '200':
           description: Lista de pedidos devuelta
     post:
       tags:
         - Pedidos
-      summary: Tramitar un nuevo pedido con múltiples productos vinculados
+      summary: Tramitar un nuevo pedido con mÃºltiples productos vinculados
       requestBody:
         required: true
         content:
@@ -295,15 +295,15 @@ paths:
                         type: number
       responses:
         '201':
-          description: Pedido y líneas de pedido creados correctamente
+          description: Pedido y lÃ­neas de pedido creados correctamente
         '400':
-          description: Error de stock o datos de envío erróneos
-
+          description: Error de stock o datos de envÃ­o errÃ³neos
+ 
   /api/pedidos/{id}:
     get:
       tags:
         - Pedidos
-      summary: Consultar los detalles de un pedido y sus respectivas líneas
+      summary: Consultar los detalles de un pedido y sus respectivas lÃ­neas
       parameters:
         - name: id
           in: path
@@ -312,13 +312,13 @@ paths:
             type: integer
       responses:
         '200':
-          description: Información del pedido y sus productos asociada
+          description: InformaciÃ³n del pedido y sus productos asociada
         '404':
           description: El pedido consultado no existe
     put:
       tags:
         - Pedidos
-      summary: Actualizar el estado de un pedido específico
+      summary: Actualizar el estado de un pedido especÃ­fico
       parameters:
         - name: id
           in: path
@@ -339,7 +339,7 @@ paths:
           description: Estado del pedido actualizado correctamente
         '404':
           description: El pedido solicitado no existe
-
+ 
   /api/roles:
     get:
       tags:
@@ -364,7 +364,7 @@ paths:
       responses:
         '201':
           description: Rol creado correctamente
-
+ 
   /api/roles/{id}:
     get:
       tags:
@@ -393,6 +393,6 @@ paths:
             type: integer
       responses:
         '204':
-          description: Rol eliminado con éxito
+          description: Rol eliminado con Ã©xito
         '404':
           description: El rol no existe

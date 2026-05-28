@@ -1,5 +1,5 @@
 from app.dtos.rol_dto import RolDTO
-
+ 
 class UsuarioDTO:
     def to_json(usuario):
         return {
@@ -16,7 +16,7 @@ class UsuarioDTO:
             "codigo_postal": usuario.codigo_postal,
             "rol": RolDTO.to_json(usuario.rol) if usuario.rol else None
         }
-
+ 
     def from_json(json_data):
         return {
             "login": json_data.get("login"),

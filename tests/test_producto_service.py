@@ -12,6 +12,7 @@ def test_url_producto_vacia_asigna_por_defecto():
     servicio = ProductoService()
     
     resultado_nulo = servicio.limpiar_url(None)
+    # Simulamos qué pasa si el frontend envía un campo vacío o que al limpiarse se queda en nada.
     resultado_vacio = servicio.limpiar_url('   ""   ')
     
     assert resultado_nulo == "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=500"

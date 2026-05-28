@@ -18,6 +18,8 @@ class ProductoService:
 
     def crear_producto(self, datos):
         datos_procesados = ProductoDTO.from_json(datos)
+        url_saneada = self.limpiar_url(datos_procesados.get("url_producto"))
+        
         nuevo_producto = Producto(
             nombre=datos_procesados.get("nombre"),
             descripcion=datos_procesados.get("descripcion"),
@@ -25,7 +27,7 @@ class ProductoService:
             stock=datos_procesados.get("stock"),
             categoria_id=datos_procesados.get("categoria_id"),
             id_tipo_producto=datos_procesados.get("id_tipo_producto"),
-            url_producto=datos_procesados.get("url_producto")
+            url_producto=url_saneada
         )
         producto_guardado = self.repository.guardar(nuevo_producto)
         return ProductoDTO.to_json(producto_guardado)
@@ -43,7 +45,9 @@ class ProductoService:
         producto.stock = datos_procesados.get("stock", producto.stock)
         producto.categoria_id = datos_procesados.get("categoria_id", producto.categoria_id)
         producto.id_tipo_producto = datos_procesados.get("id_tipo_producto", producto.id_tipo_producto)
-        producto.url_producto = datos_procesados.get("url_producto", producto.url_producto)
+        
+        if "url_producto" in datos_procesados:
+            producto.url_producto = self.limpiar_url(datos_procesados.get("url_producto"))
         
         producto_actualizado = self.repository.guardar(producto)
         return ProductoDTO.to_json(producto_actualizado)
@@ -54,3 +58,12 @@ class ProductoService:
             self.repository.eliminar(producto)
             return True
         return False
+    
+    def limpiar_url(self, url):
+        if not url or not str(url).strip() or str(url).strip() == '""':
+            return "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=500"
+        
+        url_limpia = str(url).strip()
+        url_limpia = url_limpia.replace('"', '')
+        url_limpia = url_limpia.replace('%22', '')
+        return url_limpia

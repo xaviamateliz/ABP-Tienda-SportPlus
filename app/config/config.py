@@ -1,8 +1,7 @@
 import os
- 
 class Config:
-    # URI de conexión apuntando a tu base de datos real (sportplus) en el servidor MySQL
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@192.168.125.139/sportplus'
+    # URI de conexiÃ³n apuntando a tu base de datos real (sportplus) en el servidor MySQL
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@192.168.125.10/sportplus'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Dominios permitidos para saltarse los bloqueos de CORS
     ALLOWED_ORIGINS = [

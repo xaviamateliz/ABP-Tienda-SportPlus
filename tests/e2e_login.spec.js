@@ -1,22 +1,34 @@
 const { test, expect } = require('@playwright/test');
 
-test.describe('Flujo de Autenticación E2E', () => {
+test.describe('Flujo E2E: Registro y Limpieza', () => {
+  let idGeneradoTemporalmente = null;
 
-    test('Debería iniciar sesión y mostrar la sección de perfil', async ({ page }) => {
-        await page.goto('http://localhost:5500/login.html');
+  test.afterAll(async ({ request }) => {
+    if (idGeneradoTemporalmente) {
+      await request.delete(`https://divisive-utopia-lilly.ngrok-free.dev/api/usuarios/${idGeneradoTemporalmente}`);
+    }
+  });
 
-        await page.fill('#login-email', 'admin@sportplus.com');
-        await page.fill('#login-password', 'password123');
+  test('Debería registrar un usuario y capturar su ID para el teardown', async ({ page }) => {
+    const promesaRespuesta = page.waitForResponse(response => 
+      response.url().includes('/api/usuarios') && response.status() === 200
+    );
 
-        await page.click('button[type="submit"]');
+    await page.goto('https://divisive-utopia-lilly.ngrok-free.dev/registro');
 
-        await expect(page).toHaveURL(/.*perfil.html/);
+    await page.fill('#registro-nombre', 'Robot Test');
+    await page.fill('#registro-email', 'robot@sportplus.com');
+    await page.fill('#registro-password', 'test1234');
+    
+    await page.click('button[type="submit"]');
 
-        const avatar = page.locator('#user-avatar');
-        await expect(avatar).toBeVisible();
-        
-        const profileName = page.locator('#profile-name');
-        await expect(profileName).not.toBeEmpty();
-    });
+    const respuestaAPI = await promesaRespuesta;
+    const cuerpoRespuesta = await respuestaAPI.json();
+    
+    idGeneradoTemporalmente = cuerpoRespuesta.id;
 
+    await expect(page).toHaveURL(/.*login/);
+    const mensajeExito = page.locator('.mensaje-exito');
+    await expect(mensajeExito).toBeVisible();
+  });
 });

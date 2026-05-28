@@ -5,7 +5,7 @@ class DeporteDTO:
             "categoria_id": deporte.categoria_id,
             "nombre": deporte.nombre
         }
-
+ 
     @staticmethod
     def from_json(datos):
         return datos
