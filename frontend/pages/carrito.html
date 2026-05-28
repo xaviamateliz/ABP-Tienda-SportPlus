@@ -8,377 +8,114 @@
   <style>
     body { padding-top: 72px; background: var(--bg); }
 
-    /* ——— CABECERA ——— */
-    .cart-header {
-      padding: 3rem 0 2rem;
-      border-bottom: 1px solid var(--border);
-    }
+    .cart-header { padding: 3rem 0 2rem; border-bottom: 1px solid var(--border); }
+    .cart-header h1 { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 0.5rem; }
+    .cart-header p { color: var(--muted); font-size: 0.9rem; }
 
-    .cart-header h1 {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      margin-bottom: 0.5rem;
-    }
-
-    .cart-header p {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    /* ——— LAYOUT PRINCIPAL ——— */
     .cart-layout {
-      display: grid;
-      grid-template-columns: 1fr 400px;
-      gap: 2.5rem;
-      padding: 3rem 0 5rem;
-      align-items: start;
+      display: grid; grid-template-columns: 1fr 400px;
+      gap: 2.5rem; padding: 3rem 0 5rem; align-items: start;
     }
 
-    /* ——— LISTA DE PRODUCTOS ——— */
-    .cart-items {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+    .cart-items { display: flex; flex-direction: column; gap: 1rem; }
 
     .cart-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      display: grid;
-      grid-template-columns: 100px 1fr auto;
-      gap: 1.5rem;
-      align-items: center;
-      transition: border-color var(--transition);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+      display: grid; grid-template-columns: 100px 1fr auto;
+      gap: 1.5rem; align-items: center; transition: border-color var(--transition);
     }
-
     .cart-item:hover { border-color: var(--border-light); }
 
     .cart-item-img {
-      width: 100px;
-      height: 120px;
-      background: var(--surface-2);
-      border-radius: var(--radius);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
+      width: 100px; height: 120px; background: var(--surface-2);
+      border-radius: var(--radius); overflow: hidden;
+      display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
     }
+    .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
 
-    .cart-item-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .cart-item-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
+    .cart-item-info { display: flex; flex-direction: column; gap: 0.4rem; }
     .cart-item-sport {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent);
     }
-
     .cart-item-name {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--white);
-      margin-bottom: 0.2rem;
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+      text-transform: uppercase; color: var(--white); margin-bottom: 0.2rem;
     }
-
-    .cart-item-talla {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .cart-item-talla strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
+    .cart-item-talla { font-size: 0.85rem; color: var(--muted); }
+    .cart-item-talla strong { color: var(--text); font-weight: 600; }
     .cart-item-price {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--white);
-      margin-top: 0.5rem;
+      font-family: var(--font-display); font-size: 1.1rem;
+      font-weight: 800; color: var(--white); margin-top: 0.5rem;
     }
 
-    .cart-item-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 1rem;
-    }
+    .cart-item-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 1rem; }
 
     .quantity-control {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--surface-2);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-sm);
-      padding: 0.3rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--surface-2); border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm); padding: 0.3rem;
     }
-
     .quantity-btn {
-      width: 32px;
-      height: 32px;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--radius-sm);
-      transition: all var(--transition);
+      width: 32px; height: 32px; background: transparent; border: none;
+      color: var(--text); font-size: 1.1rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--radius-sm); transition: all var(--transition);
     }
-
-    .quantity-btn:hover {
-      background: var(--surface);
-      color: var(--white);
-    }
-
-    .quantity-btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
+    .quantity-btn:hover { background: var(--surface); color: var(--white); }
+    .quantity-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     .quantity-value {
-      min-width: 32px;
-      text-align: center;
-      font-family: var(--font-display);
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--white);
+      min-width: 32px; text-align: center; font-family: var(--font-display);
+      font-size: 0.95rem; font-weight: 700; color: var(--white);
     }
 
     .btn-remove {
-      background: transparent;
-      border: 1px solid var(--border-light);
-      color: var(--muted);
-      font-size: 0.75rem;
-      font-family: var(--font-display);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.4rem 0.8rem;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all var(--transition);
+      background: transparent; border: 1px solid var(--border-light);
+      color: var(--muted); font-size: 0.75rem; font-family: var(--font-display);
+      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.4rem 0.8rem; border-radius: var(--radius-sm);
+      cursor: pointer; transition: all var(--transition);
     }
+    .btn-remove:hover { border-color: var(--accent); color: var(--accent); }
 
-    .btn-remove:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    /* ——— RESUMEN / CHECKOUT ——— */
     .cart-summary {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.8rem;
-      position: sticky;
-      top: 90px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .summary-title {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      color: var(--white);
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .summary-line {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .summary-line span:last-child {
-      font-family: var(--font-display);
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .summary-total {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-      margin-top: 0.5rem;
-    }
-
-    .summary-total-label {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--white);
-    }
-
-    .summary-total-price {
-      font-family: var(--font-display);
-      font-size: 1.8rem;
-      font-weight: 900;
-      color: var(--white);
-    }
-
-    .btn-checkout {
-      width: 100%;
-      justify-content: center;
-      padding: 1rem;
-      font-size: 1rem;
-    }
-
-    .summary-note {
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    /* ——— CARRITO VACÍO ——— */
-    .cart-empty {
-      grid-column: 1 / -1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 6rem 2rem;
-      gap: 1.5rem;
-      text-align: center;
-    }
-
-    .cart-empty-icon {
-      font-size: 5rem;
-      opacity: 0.5;
-    }
-
-    .cart-empty h2 {
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
-      margin-bottom: 0.5rem;
-    }
-
-    .cart-empty p {
-      color: var(--muted);
-      font-size: 0.95rem;
-      max-width: 400px;
-    }
-
-    /* ——— RESPONSIVE ——— */
-    @media (max-width: 1000px) {
-      .cart-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .cart-summary {
-        position: static;
-      }
-
-      .cart-item {
-        grid-template-columns: 80px 1fr;
-        gap: 1rem;
-      }
-
-      .cart-item-controls {
-        grid-column: 1 / -1;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
-    }
-  </style>
-
-  <style>
-    /* ——— MODAL PAGO ——— */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-      display: none; align-items: center; justify-content: center;
-      z-index: 500; backdrop-filter: blur(6px);
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-pago {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 2rem; width: 100%;
-      max-width: 460px; display: flex; flex-direction: column; gap: 1.25rem;
+      border-radius: var(--radius-lg); padding: 1.8rem;
+      position: sticky; top: 90px; display: flex; flex-direction: column; gap: 1.5rem;
     }
-    .modal-pago-header {
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .modal-pago-title {
-      font-family: var(--font-display); font-size: 1.5rem; font-weight: 900;
+    .summary-title {
+      font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
       text-transform: uppercase; color: var(--white);
+      padding-bottom: 1rem; border-bottom: 1px solid var(--border);
     }
-    .modal-pago-close {
-      background: none; border: none; color: var(--muted);
-      font-size: 1.5rem; cursor: pointer; line-height: 1;
-    }
-    .modal-pago-close:hover { color: var(--white); }
-    .pago-field { display: flex; flex-direction: column; gap: 0.4rem; }
-    .pago-field label {
-      font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
-    }
-    .pago-field input {
-      background: var(--surface-2); border: 1px solid var(--border-light);
-      border-radius: var(--radius-sm); padding: 0.75rem 1rem;
-      font-family: var(--font-body); font-size: 0.95rem; color: var(--white);
-      outline: none; width: 100%; box-sizing: border-box;
-      transition: border-color var(--transition);
-    }
-    .pago-field input:focus { border-color: var(--accent); }
-    .pago-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .pago-card-icons { display: flex; gap: 0.5rem; align-items: center; }
-    .pago-card-icon {
-      background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: 4px; padding: 0.2rem 0.5rem;
-      font-size: 0.75rem; color: var(--muted);
-      font-family: var(--font-display); font-weight: 700;
-    }
-    .pago-total {
+    .summary-line {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 1rem; background: var(--surface-2); border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
+      font-size: 0.9rem; color: var(--muted);
     }
-    .pago-total-label { font-size: 0.85rem; color: var(--muted); }
-    .pago-total-amount {
-      font-family: var(--font-display); font-size: 1.4rem;
-      font-weight: 900; color: var(--white);
+    .summary-line span:last-child { font-family: var(--font-display); font-weight: 700; color: var(--text); }
+    .summary-total {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 1rem; border-top: 1px solid var(--border); margin-top: 0.5rem;
     }
-    .pago-seguro {
-      font-size: 0.75rem; color: var(--muted); text-align: center;
+    .summary-total-label {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--white);
     }
-    #pago-msg {
-      font-size: 0.85rem; padding: 0.5rem 0;
-      display: none;
-    }
-  </style>
+    .summary-total-price { font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; color: var(--white); }
+    .btn-checkout { width: 100%; justify-content: center; padding: 1rem; font-size: 1rem; }
+    .summary-note { font-size: 0.78rem; color: var(--muted); text-align: center; line-height: 1.5; }
 
-  <style>
+    .cart-empty {
+      grid-column: 1 / -1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 6rem 2rem; gap: 1.5rem; text-align: center;
+    }
+    .cart-empty-icon { font-size: 5rem; opacity: 0.5; }
+    .cart-empty h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); margin-bottom: 0.5rem; }
+    .cart-empty p { color: var(--muted); font-size: 0.95rem; max-width: 400px; }
+
+    /* ——— MODAL PAGO ——— */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.82);
       display: none; align-items: center; justify-content: center;
@@ -388,8 +125,7 @@
     .modal-pago {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius-lg); padding: 2rem; width: 100%;
-      max-width: 460px; display: flex; flex-direction: column; gap: 1.25rem;
-      margin: 1rem;
+      max-width: 460px; display: flex; flex-direction: column; gap: 1.25rem; margin: 1rem;
     }
     .modal-pago-header { display: flex; align-items: center; justify-content: space-between; }
     .modal-pago-title {
@@ -418,8 +154,7 @@
     .pago-card-icons { display: flex; gap: 0.5rem; margin-top: 0.4rem; }
     .pago-card-icon {
       background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: 4px; padding: 0.2rem 0.6rem;
-      font-size: 0.7rem; color: var(--muted);
+      border-radius: 4px; padding: 0.2rem 0.6rem; font-size: 0.7rem; color: var(--muted);
       font-family: var(--font-display); font-weight: 700; letter-spacing: 0.05em;
     }
     .pago-total {
@@ -428,17 +163,20 @@
       border-radius: var(--radius-sm); border: 1px solid var(--border);
     }
     .pago-total-label { font-size: 0.9rem; color: var(--muted); }
-    .pago-total-amount {
-      font-family: var(--font-display); font-size: 1.5rem;
-      font-weight: 900; color: var(--white);
-    }
+    .pago-total-amount { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: var(--white); }
     .pago-seguro { font-size: 0.75rem; color: var(--muted); text-align: center; }
     #pago-msg { font-size: 0.85rem; color: var(--accent); display: none; padding: 0.25rem 0; }
+
+    @media (max-width: 1000px) {
+      .cart-layout { grid-template-columns: 1fr; }
+      .cart-summary { position: static; }
+      .cart-item { grid-template-columns: 80px 1fr; gap: 1rem; }
+      .cart-item-controls { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- ============ NAVBAR ============ -->
   <nav class="navbar">
     <a href="../index.html" class="navbar-logo">Sport<span>+</span></a>
     <ul class="navbar-links">
@@ -457,7 +195,6 @@
     </div>
   </nav>
 
-  <!-- ============ CABECERA ============ -->
   <div class="cart-header">
     <div class="container">
       <h1>Carrito</h1>
@@ -465,13 +202,10 @@
     </div>
   </div>
 
-  <!-- ============ CONTENIDO PRINCIPAL ============ -->
   <div class="container">
-    <div class="cart-layout" id="cart-content">
-    </div>
+    <div class="cart-layout" id="cart-content"></div>
   </div>
 
-  <!-- ============ FOOTER ============ -->
   <footer>
     <div class="container">
       <div class="footer-inner">
@@ -483,7 +217,54 @@
     </div>
   </footer>
 
-  <!-- ============ SCRIPTS ============ -->
+  <!-- MODAL PAGO (solo uno) -->
+  <div class="modal-overlay" id="modal-pago">
+    <div class="modal-pago">
+      <div class="modal-pago-header">
+        <span class="modal-pago-title">💳 Datos de pago</span>
+        <button class="modal-pago-close" onclick="cerrarModalPago()">×</button>
+      </div>
+      <div class="pago-total">
+        <span class="pago-total-label">Total a pagar</span>
+        <span class="pago-total-amount" id="pago-total-amount">—</span>
+      </div>
+      <div class="pago-field">
+        <label>Nombre del titular</label>
+        <input type="text" id="p-nombre" placeholder="JUAN GARCIA LOPEZ" maxlength="40"
+          oninput="this.value = this.value.toUpperCase()">
+      </div>
+      <div class="pago-field">
+        <label>Numero de tarjeta</label>
+        <input type="text" id="p-tarjeta" placeholder="0000 0000 0000 0000"
+          oninput="formatearTarjeta(this)" maxlength="19" inputmode="numeric">
+        <div class="pago-card-icons">
+          <span class="pago-card-icon">VISA</span>
+          <span class="pago-card-icon">MC</span>
+          <span class="pago-card-icon">AMEX</span>
+        </div>
+      </div>
+      <div class="pago-row">
+        <div class="pago-field">
+          <label>Caducidad</label>
+          <input type="text" id="p-fecha" placeholder="MM/AA" maxlength="5"
+            oninput="formatearFecha(this)" inputmode="numeric">
+        </div>
+        <div class="pago-field">
+          <label>CVV</label>
+          <input type="text" id="p-cvv" placeholder="123" maxlength="4"
+            oninput="formatearCVV(this)" inputmode="numeric">
+        </div>
+      </div>
+      <p id="pago-msg"></p>
+      <button class="btn btn-primary" id="btn-pagar"
+        style="width:100%;justify-content:center;padding:1rem;font-size:1rem;"
+        onclick="confirmarPago()">
+        Pagar ahora
+      </button>
+      <p class="pago-seguro">🔒 Pago simulado - No se realizara ningun cargo real</p>
+    </div>
+  </div>
+
   <script src="../js/config.js"></script>
   <script src="../js/utils.js"></script>
   <script src="../js/productos.js"></script>
@@ -523,10 +304,10 @@
         contenedor.innerHTML = `
           <div class="cart-empty">
             <div class="cart-empty-icon">🛒</div>
-            <h2>Tu carrito está vacío</h2>
-            <p>Añade productos desde el catálogo para empezar tu compra</p>
+            <h2>Tu carrito esta vacio</h2>
+            <p>Añade productos desde el catalogo para empezar tu compra</p>
             <a href="catalogo.html" class="btn btn-primary" style="margin-top:1rem">
-              Ir al catálogo
+              Ir al catalogo
             </a>
           </div>
         `;
@@ -535,54 +316,32 @@
 
       const itemsHTML = carrito.map(function(item, index) {
         const precioLinea = item.precio * item.cantidad;
-
-        // FIX: usar url_producto || imagen para la imagen
         const urlImagen = item.url_producto || item.imagen || "";
-
-        // FIX: usar categoria.nombre || deporte para la categoría
         const categoria = (item.categoria && item.categoria.nombre)
           ? item.categoria.nombre
           : (item.deporte || "");
 
         return `
           <div class="cart-item">
-            <!-- Imagen -->
             <div class="cart-item-img">
               ${urlImagen
                 ? `<img src="${urlImagen}" alt="${item.nombre}" onerror="this.onerror=null;this.parentElement.innerHTML='👕'">`
                 : `👕`
               }
             </div>
-
-            <!-- Información -->
             <div class="cart-item-info">
               <p class="cart-item-sport">${categoria}</p>
               <h3 class="cart-item-name">${item.nombre}</h3>
               <p class="cart-item-talla">Talla: <strong>${item.talla || item.tallaSeleccionada || '-'}</strong></p>
               <p class="cart-item-price">${formatearPrecio(precioLinea)}</p>
             </div>
-
-            <!-- Controles -->
             <div class="cart-item-controls">
               <div class="quantity-control">
-                <button
-                  class="quantity-btn"
-                  onclick="cambiarCantidad(${index}, -1)"
-                  ${item.cantidad <= 1 ? "disabled" : ""}
-                >
-                  −
-                </button>
+                <button class="quantity-btn" onclick="cambiarCantidad(${index}, -1)" ${item.cantidad <= 1 ? "disabled" : ""}>−</button>
                 <span class="quantity-value">${item.cantidad}</span>
-                <button
-                  class="quantity-btn"
-                  onclick="cambiarCantidad(${index}, 1)"
-                >
-                  +
-                </button>
+                <button class="quantity-btn" onclick="cambiarCantidad(${index}, 1)">+</button>
               </div>
-              <button class="btn-remove" onclick="eliminarProducto(${index})">
-                🗑 Eliminar
-              </button>
+              <button class="btn-remove" onclick="eliminarProducto(${index})">🗑 Eliminar</button>
             </div>
           </div>
         `;
@@ -591,45 +350,35 @@
       const subtotal = carrito.reduce(function(total, item) {
         return total + (item.precio * item.cantidad);
       }, 0);
-
       const gastoEnvio = subtotal >= 50 ? 0 : 4.99;
       const total = subtotal + gastoEnvio;
 
       contenedor.innerHTML = `
-        <div class="cart-items">
-          ${itemsHTML}
-        </div>
-
+        <div class="cart-items">${itemsHTML}</div>
         <div class="cart-summary">
           <h2 class="summary-title">Resumen</h2>
-
           <div class="summary-line">
             <span>Subtotal</span>
             <span>${formatearPrecio(subtotal)}</span>
           </div>
-
           <div class="summary-line">
-            <span>Envío</span>
+            <span>Envio</span>
             <span>${gastoEnvio === 0 ? "Gratis" : formatearPrecio(gastoEnvio)}</span>
           </div>
-
           ${subtotal < 50 && subtotal > 0 ? `
             <p style="font-size:0.78rem;color:var(--muted);margin:-0.5rem 0 0;">
-              Añade ${formatearPrecio(50 - subtotal)} más para envío gratis
+              Añade ${formatearPrecio(50 - subtotal)} mas para envio gratis
             </p>
           ` : ""}
-
           <div class="summary-total">
             <span class="summary-total-label">Total</span>
             <span class="summary-total-price">${formatearPrecio(total)}</span>
           </div>
-
           <button class="btn btn-primary btn-checkout" onclick="finalizarCompra()">
             Finalizar compra
           </button>
-
           <p class="summary-note">
-            Los precios incluyen IVA. El pedido se procesará de forma segura.
+            Los precios incluyen IVA. El pedido se procesara de forma segura.
           </p>
         </div>
       `;
@@ -637,9 +386,7 @@
 
     function cambiarCantidad(index, delta) {
       carrito[index].cantidad += delta;
-      if (carrito[index].cantidad <= 0) {
-        carrito.splice(index, 1);
-      }
+      if (carrito[index].cantidad <= 0) carrito.splice(index, 1);
       guardarCarrito();
       renderizarCarrito();
     }
@@ -647,8 +394,7 @@
     function eliminarProducto(index) {
       const producto = carrito[index];
       const talla = producto.talla || producto.tallaSeleccionada || "-";
-      const confirmar = confirm(`¿Eliminar ${producto.nombre} (${talla}) del carrito?`);
-      if (confirmar) {
+      if (confirm("Eliminar " + producto.nombre + " (" + talla + ") del carrito?")) {
         carrito.splice(index, 1);
         guardarCarrito();
         renderizarCarrito();
@@ -656,11 +402,7 @@
     }
 
     function finalizarCompra() {
-      if (carrito.length === 0) {
-        alert("El carrito está vacío");
-        return;
-      }
-      // Abrir modal de pago
+      if (carrito.length === 0) { alert("El carrito esta vacio"); return; }
       const totalModal = carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
       const envioModal = totalModal >= 50 ? 0 : 4.99;
       document.getElementById("pago-total-amount").textContent = formatearPrecio(totalModal + envioModal);
@@ -696,9 +438,9 @@
       const cvv     = document.getElementById("p-cvv").value.trim();
 
       if (!nombre) return mostrarPagoError("Introduce el nombre del titular.");
-      if (tarjeta.length !== 16) return mostrarPagoError("El número de tarjeta debe tener 16 dígitos.");
-      if (!/^\d{2}\/\d{2}$/.test(fecha)) return mostrarPagoError("Fecha no válida. Usa MM/AA.");
-      if (cvv.length < 3) return mostrarPagoError("CVV no válido.");
+      if (tarjeta.length !== 16) return mostrarPagoError("El numero de tarjeta debe tener 16 digitos.");
+      if (!/^\d{2}\/\d{2}$/.test(fecha)) return mostrarPagoError("Fecha no valida. Usa MM/AA.");
+      if (cvv.length < 3) return mostrarPagoError("CVV no valido.");
 
       const btn = document.getElementById("btn-pagar");
       btn.textContent = "Procesando...";
@@ -713,16 +455,13 @@
 
       const subtotal = carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
       const total = subtotal + (subtotal >= 50 ? 0 : 4.99);
+      const usuario_id = localStorage.getItem("usuario_id");
 
       try {
-        const token = localStorage.getItem("token");
-        const headers = { "Content-Type": "application/json" };
-        if (token) headers["Authorization"] = "Bearer " + token;
-
         const res = await fetch(API_BASE_URL + "/pedidos", {
           method: "POST",
-          headers: headers,
-          body: JSON.stringify({ lineas: lineas, total: total })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lineas: lineas, total: total, usuario_id: usuario_id })
         });
 
         const data = await res.json();
@@ -732,18 +471,15 @@
           carrito = [];
           guardarCarrito();
           cerrarModalPago();
-
           document.getElementById("cart-content").innerHTML = `
             <div class="cart-empty">
               <div class="cart-empty-icon">✅</div>
-              <h2>¡Pedido realizado!</h2>
+              <h2>Pedido realizado!</h2>
               <p>Tu pedido ha sido registrado correctamente.</p>
               <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;">
-                Número de pedido: <strong style="color:var(--white)">#SP${numPedido}</strong>
+                Numero de pedido: <strong style="color:var(--white)">#SP${numPedido}</strong>
               </p>
-              <a href="catalogo.html" class="btn btn-primary" style="margin-top:2rem">
-                Seguir comprando
-              </a>
+              <a href="catalogo.html" class="btn btn-primary" style="margin-top:2rem">Seguir comprando</a>
             </div>
           `;
           document.getElementById("items-count").textContent = "0 productos";
@@ -753,7 +489,7 @@
           btn.disabled = false;
         }
       } catch (err) {
-        mostrarPagoError("Error de conexión con el servidor.");
+        mostrarPagoError("Error de conexion con el servidor.");
         btn.textContent = "Pagar ahora";
         btn.disabled = false;
       }
@@ -761,127 +497,9 @@
 
     function mostrarPagoError(msg) {
       const el = document.getElementById("pago-msg");
-      el.textContent = "⚠ " + msg;
+      el.textContent = "¿ " + msg;
       el.style.display = "block";
     }
   </script>
-
-  <!-- ============ MODAL PAGO ============ -->
-  <div class="modal-overlay" id="modal-pago">
-    <div class="modal-pago">
-
-      <div class="modal-pago-header">
-        <span class="modal-pago-title">💳 Pago</span>
-        <button class="modal-pago-close" onclick="cerrarModalPago()">×</button>
-      </div>
-
-      <!-- Total a pagar -->
-      <div class="pago-total" id="pago-resumen">
-        <span class="pago-total-label">Total a pagar</span>
-        <span class="pago-total-amount" id="pago-total-amount">—</span>
-      </div>
-
-      <!-- Nombre titular -->
-      <div class="pago-field">
-        <label>Nombre del titular</label>
-        <input type="text" id="p-nombre" placeholder="JUAN GARCIA LOPEZ" maxlength="40"
-          oninput="this.value = this.value.toUpperCase()">
-      </div>
-
-      <!-- Número de tarjeta -->
-      <div class="pago-field">
-        <label>Número de tarjeta</label>
-        <input type="text" id="p-tarjeta" placeholder="0000 0000 0000 0000"
-          oninput="formatearTarjeta(this)" maxlength="19" inputmode="numeric">
-        <div class="pago-card-icons" style="margin-top:0.4rem;">
-          <span class="pago-card-icon">VISA</span>
-          <span class="pago-card-icon">MC</span>
-          <span class="pago-card-icon">AMEX</span>
-        </div>
-      </div>
-
-      <!-- Fecha y CVV -->
-      <div class="pago-row">
-        <div class="pago-field">
-          <label>Fecha de expiración</label>
-          <input type="text" id="p-fecha" placeholder="MM/AA" maxlength="5"
-            oninput="formatearFecha(this)" inputmode="numeric">
-        </div>
-        <div class="pago-field">
-          <label>CVV</label>
-          <input type="text" id="p-cvv" placeholder="123" maxlength="4"
-            oninput="formatearCVV(this)" inputmode="numeric">
-        </div>
-      </div>
-
-      <p id="pago-msg"></p>
-
-      <button class="btn btn-primary" id="btn-pagar"
-        style="width:100%;justify-content:center;padding:1rem;font-size:1rem;"
-        onclick="confirmarPago()">
-        Pagar ahora
-      </button>
-
-      <p class="pago-seguro">🔒 Pago simulado · No se realizará ningún cargo real</p>
-    </div>
-  </div>
-
-
-  <!-- ============ MODAL PAGO ============ -->
-  <div class="modal-overlay" id="modal-pago">
-    <div class="modal-pago">
-
-      <div class="modal-pago-header">
-        <span class="modal-pago-title">💳 Datos de pago</span>
-        <button class="modal-pago-close" onclick="cerrarModalPago()">×</button>
-      </div>
-
-      <div class="pago-total">
-        <span class="pago-total-label">Total a pagar</span>
-        <span class="pago-total-amount" id="pago-total-amount">—</span>
-      </div>
-
-      <div class="pago-field">
-        <label>Nombre del titular</label>
-        <input type="text" id="p-nombre" placeholder="JUAN GARCIA LOPEZ" maxlength="40"
-          oninput="this.value = this.value.toUpperCase()">
-      </div>
-
-      <div class="pago-field">
-        <label>Número de tarjeta</label>
-        <input type="text" id="p-tarjeta" placeholder="0000 0000 0000 0000"
-          oninput="formatearTarjeta(this)" maxlength="19" inputmode="numeric">
-        <div class="pago-card-icons">
-          <span class="pago-card-icon">VISA</span>
-          <span class="pago-card-icon">MC</span>
-          <span class="pago-card-icon">AMEX</span>
-        </div>
-      </div>
-
-      <div class="pago-row">
-        <div class="pago-field">
-          <label>Caducidad</label>
-          <input type="text" id="p-fecha" placeholder="MM/AA" maxlength="5"
-            oninput="formatearFecha(this)" inputmode="numeric">
-        </div>
-        <div class="pago-field">
-          <label>CVV</label>
-          <input type="text" id="p-cvv" placeholder="123" maxlength="4"
-            oninput="formatearCVV(this)" inputmode="numeric">
-        </div>
-      </div>
-
-      <p id="pago-msg"></p>
-
-      <button class="btn btn-primary" id="btn-pagar"
-        style="width:100%;justify-content:center;padding:1rem;font-size:1rem;"
-        onclick="confirmarPago()">
-        Pagar ahora
-      </button>
-
-      <p class="pago-seguro">🔒 Pago simulado · No se realizará ningún cargo real</p>
-    </div>
-  </div>
-
 </body>
 </html>
