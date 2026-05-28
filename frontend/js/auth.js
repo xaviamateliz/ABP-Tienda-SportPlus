@@ -34,21 +34,34 @@ async function login(email, password) {
 // Crea una cuenta nueva con nombre, email y contraseña
 async function registro(nombre, email, password) {
     try {
-        const res = await fetch(`${API_BASE_URL}/auth/registro`, {
+        const res = await fetch(`${API_BASE_URL}/usuarios`, {
             method: "POST",
             headers: getHeaders(),
-            body: JSON.stringify({ nombre, email, password })
+            body: JSON.stringify({
+                login: email,
+                password: password,
+                nombre: nombre.split(' ')[0] || nombre,
+                apellido: nombre.split(' ').slice(1).join(' ') || '-',
+                dni: '00000000A',
+                direccion: '-',
+                telefono: '-',
+                poblacion: '-',
+                provincia: '-',
+                codigo_postal: 0,
+                rol_id: 2
+            })
         });
         const datos = await res.json();
 
         if (res.ok) {
+            const u = datos.usuario || datos;
             localStorage.setItem("token", "token-falso-abp-123");
-            localStorage.setItem("rol", datos.usuario.rol.id == 1 ? "ADMIN" : "USER");
-            localStorage.setItem("nombre", datos.usuario.nombre);
-            localStorage.setItem("usuario_id", datos.usuario.id);
+            localStorage.setItem("rol", u.rol && u.rol.id == 1 ? "ADMIN" : "USER");
+            localStorage.setItem("nombre", u.nombre || nombre);
+            localStorage.setItem("usuario_id", u.id);
             return { ok: true };
         } else {
-            return { ok: false, mensaje: datos.mensaje || "Error al crear la cuenta" };
+            return { ok: false, mensaje: datos.mensaje || datos.error || "Error al crear la cuenta" };
         }
     } catch (err) {
         console.error("Error registro:", err);
