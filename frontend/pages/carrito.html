@@ -401,8 +401,32 @@
       }
     }
 
-    function finalizarCompra() {
+    async function finalizarCompra() {
       if (carrito.length === 0) { alert("El carrito esta vacio"); return; }
+
+      // Comprobar si el usuario esta logueado
+      const usuario_id = localStorage.getItem("usuario_id");
+      if (!usuario_id) {
+        window.location.href = "login.html?redirect=carrito.html";
+        return;
+      }
+
+      // Comprobar si tiene direccion
+      try {
+        const res = await fetch(API_BASE_URL + "/usuarios/" + usuario_id, {
+          headers: { "Content-Type": "application/json" }
+        });
+        if (res.ok) {
+          const u = await res.json();
+          if (!u.direccion || u.direccion === '-') {
+            if (confirm("Necesitas añadir tu direccion antes de comprar. ¿Ir a Mi Perfil?")) {
+              window.location.href = "perfil.html";
+            }
+            return;
+          }
+        }
+      } catch(e) {}
+
       const totalModal = carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
       const envioModal = totalModal >= 50 ? 0 : 4.99;
       document.getElementById("pago-total-amount").textContent = formatearPrecio(totalModal + envioModal);
