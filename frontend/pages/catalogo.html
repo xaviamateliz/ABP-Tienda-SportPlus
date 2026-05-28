@@ -455,9 +455,13 @@
       // Leer ?deporte= de la URL
       const deporteParam = getParam("deporte");
       if (deporteParam) {
-        filtrosActivos.deporte = deporteParam;
-        const radio = document.querySelector(`input[name="deporte"][value="${deporteParam}"]`);
-        if (radio) radio.checked = true;
+        const deporteCapitalizado = deporteParam.charAt(0).toUpperCase() + deporteParam.slice(1).toLowerCase();
+        filtrosActivos.deporte = deporteCapitalizado;
+        // Marcar el radio ignorando mayúsculas/minúsculas
+        const radios = document.querySelectorAll('input[name="deporte"]');
+        radios.forEach(r => {
+          if (r.value.toLowerCase() === deporteParam.toLowerCase()) r.checked = true;
+        });
       }
 
       // Cargar todos los productos una sola vez
@@ -487,10 +491,10 @@
 
       let productos = [...todosLosProductos];
 
-      // Filtro deporte en cliente (compara con categoria.nombre)
+      // Filtro deporte en cliente (compara con categoria.nombre, ignorando tildes)
       if (filtrosActivos.deporte !== "todos") {
         productos = productos.filter(p =>
-          p.categoria?.nombre?.toLowerCase() === filtrosActivos.deporte.toLowerCase()
+          quitarTildes(p.categoria?.nombre?.toLowerCase()) === quitarTildes(filtrosActivos.deporte.toLowerCase())
         );
       }
 
@@ -565,6 +569,10 @@
     function actualizarPrecio(valor) {
       document.getElementById("precio-valor").textContent = valor + "€";
       aplicarFiltros();
+    }
+
+    function quitarTildes(str) {
+      return (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
 
     function resetFiltros() {
