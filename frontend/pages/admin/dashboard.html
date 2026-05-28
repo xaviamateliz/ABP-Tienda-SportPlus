@@ -359,7 +359,7 @@
           document.getElementById('tabla-pedidos').innerHTML = ultimos.map(p => `
             <tr onclick="location.href='pedidos.html'" style="cursor:pointer;">
               <td><strong>#${p.id}</strong></td>
-              <td>${p.usuario_id || p.usuario || '—'}</td>
+              <td>${p.email || p.usuario || p.usuario_id || '—'}</td>
               <td>${p.lineas ? p.lineas.length + ' producto(s)' : '—'}</td>
               <td>${getBadge(p.estado)}</td>
             </tr>
@@ -381,7 +381,7 @@
 
   function cerrarSesion() {
     localStorage.clear();
-    window.location.href = '../index.html';
+    window.location.href = '../../index.html';
   }
 
   cargarDashboard();
