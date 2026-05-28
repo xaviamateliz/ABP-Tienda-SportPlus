@@ -329,6 +329,26 @@
     }
   }
 
+  function comprobarFuerza(valor) {
+    const wrap = document.getElementById('strength-wrap');
+    const bar  = document.getElementById('strength-bar');
+    const txt  = document.getElementById('strength-text');
+    if (!wrap) return;
+    wrap.classList.add('visible');
+    const score = [/.{8,}/, /[A-Z]/, /[0-9]/, /[^A-Za-z0-9]/].filter(r => r.test(valor)).length;
+    const niveles = [
+      ['', '0%', ''],
+      ['Debil', '25%', '#ff3d00'],
+      ['Regular', '50%', '#ffc107'],
+      ['Buena', '75%', '#44ff88'],
+      ['Fuerte', '100%', '#00e676']
+    ];
+    const [label, width, color] = niveles[score];
+    bar.style.width = width;
+    bar.style.background = color;
+    txt.textContent = label;
+  }
+
   function mostrarError(texto, btn) {
     const errMsg = document.getElementById('msg-error');
     errMsg.textContent   = texto;

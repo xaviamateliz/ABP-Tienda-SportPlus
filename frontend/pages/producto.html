@@ -344,6 +344,7 @@
     // Empieza vacía y se rellena cuando hace clic en una talla
     // ─────────────────────────────────────────────
     let tallaSeleccionada = "";
+    let productoActual = null;  // Variable global para guardar el producto cargado
 
     // ─────────────────────────────────────────────
     // AL CARGAR LA PÁGINA ejecutamos la función principal
@@ -374,6 +375,9 @@
         return;
       }
 
+      // Guardamos el producto en la variable global para usarla en handleAgregarCarrito
+      productoActual = producto;
+
       // Si todo va bien, pintamos la página con los datos del producto
       renderizarPagina(producto);
     });
@@ -390,9 +394,10 @@
       // Generamos el HTML de las tallas como botones individuales
       // producto.tallas es un array: ["S", "M", "L", "XL"]
       // .map() convierte cada talla en un botón HTML
-      const tallasHTML = producto.tallas.map(function(talla) {
+      const tallas = producto.tallas || ["S", "M", "L", "XL"];
+      const tallasHTML = tallas.map(function(talla) {
         return `<button class="talla-btn" onclick="seleccionarTalla(this, '${talla}')">${talla}</button>`;
-      }).join(""); // .join("") une todos los botones en un solo string
+      }).join("");
 
       // Calculamos el color y texto del indicador de stock
       let stockClase = "stock-ok";
@@ -418,8 +423,8 @@
           <div class="product-gallery">
             <div class="product-main-img">
 
-              ${producto.imagen
-                ? `<img src="${producto.imagen}" alt="${producto.nombre}">`
+              ${(producto.url_producto || producto.imagen)
+                ? `<img src="${producto.url_producto || producto.imagen}" alt="${producto.nombre}">`
                 : `👕`
               }
 
@@ -434,22 +439,22 @@
           <!-- ——— COLUMNA DERECHA: Información ——— -->
           <div class="product-info">
 
-            <!-- Migas de pan: enlaces para volver atrás -->
-            <nav class="breadcrumb">
-              <a href="../index.html">Inicio</a>
-              <span>/</span>
-              <a href="catalogo.html">Catálogo</a>
-              <span>/</span>
-              <a href="catalogo.html?deporte=${producto.deporte}">${producto.deporte}</a>
-              <span>/</span>
-              <span style="color: var(--muted)">${producto.nombre}</span>
-            </nav>
+          <!-- Migas de pan: enlaces para volver atrás -->
+          <nav class="breadcrumb">
+            <a href="../index.html">Inicio</a>
+            <span>/</span>
+            <a href="catalogo.html">Catálogo</a>
+            <span>/</span>
+            <a href="catalogo.html?deporte=${producto.categoria?.nombre || ''}">${producto.categoria?.nombre || ''}</a>
+            <span>/</span>
+            <span style="color: var(--muted)">${producto.nombre}</span>
+          </nav>
 
-            <!-- Deporte y nombre -->
-            <div>
-              <p class="product-deporte">${producto.deporte}</p>
-              <h1 class="product-nombre">${producto.nombre}</h1>
-            </div>
+          <!-- Deporte y nombre -->
+          <div>
+            <p class="product-deporte">${producto.categoria?.nombre || ''}</p>
+            <h1 class="product-nombre">${producto.nombre}</h1>
+          </div>
 
             <!-- Precio -->
             <p class="product-precio">${formatearPrecio(producto.precio)}</p>
@@ -548,11 +553,7 @@
         document.getElementById("talla-aviso").style.display = "block";
         return; // "return" detiene la función aquí, no continúa
       }
-
-      // Buscamos el producto en el mock data
-      const producto = MOCK_PRODUCTOS.find(function(p) {
-        return p.id === idProducto;
-      });
+      const producto = productoActual;
 
       if (!producto) return;
 

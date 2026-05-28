@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usuarios Admin — Sport Plus</title>
+  <link rel="stylesheet" href="../../css/main.css" />
+  <style>
+    .admin-layout { display: flex; min-height: 100vh; padding-top: 72px; }
+
+    /* SIDEBAR */
+    .admin-sidebar {
+      width: 240px; flex-shrink: 0;
+      background: var(--surface); border-right: 1px solid var(--border);
+      position: fixed; top: 72px; left: 0; bottom: 0;
+      display: flex; flex-direction: column; padding: 2rem 0; z-index: 100;
+    }
+    .sidebar-label { font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-2); padding: 0 1.5rem; margin-bottom: 0.5rem; margin-top: 1.5rem; }
+    .sidebar-label:first-child { margin-top: 0; }
+    .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); transition: all var(--transition); border-left: 3px solid transparent; text-decoration: none; }
+    .sidebar-link:hover { color: var(--white); background: var(--surface-2); }
+    .sidebar-link.active { color: var(--white); border-left-color: var(--accent); background: var(--surface-2); }
+    .sidebar-link .icon { font-size: 1.1rem; width: 20px; text-align: center; }
+    .sidebar-bottom { margin-top: auto; padding: 1rem 0; border-top: 1px solid var(--border); }
+
+    /* MAIN */
+    .admin-main { margin-left: 240px; flex: 1; padding: 2.5rem; }
+
+    /* PAGE HEADER */
+    .page-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; gap: 1rem; flex-wrap: wrap; }
+    .page-eyebrow { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+    .page-eyebrow-line { width: 24px; height: 2px; background: var(--accent); }
+    .page-eyebrow span { font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+    .page-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; text-transform: uppercase; color: var(--white); line-height: 1; }
+
+    /* TOOLBAR */
+    .toolbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .search-input {
+      background: var(--surface); border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm); padding: 0.65rem 1rem;
+      font-family: var(--font-body); font-size: 0.9rem; color: var(--text);
+      outline: none; width: 280px; transition: border-color var(--transition);
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .search-input::placeholder { color: var(--muted-2); }
+
+    /* TABLA */
+    .admin-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .admin-table { width: 100%; border-collapse: collapse; }
+    .admin-table th { font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 0.75rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+    .admin-table td { padding: 1rem 1.5rem; font-size: 0.9rem; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* AVATAR */
+    .user-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #ff7043);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 0.9rem; font-weight: 700;
+      color: var(--white); flex-shrink: 0;
+    }
+    .user-info { display: flex; align-items: center; gap: 0.75rem; }
+    .user-name { font-weight: 600; color: var(--white); }
+    .user-email { font-size: 0.8rem; color: var(--muted); }
+
+    /* BADGES ROL */
+    .rol-badge {
+      display: inline-block; padding: 0.2rem 0.7rem;
+      font-family: var(--font-display); font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; border-radius: 100px;
+    }
+    .rol-admin { background: rgba(255,61,0,0.15); color: var(--accent); }
+    .rol-cliente { background: rgba(100,149,237,0.15); color: cornflowerblue; }
+
+    /* ACCIONES */
+    .table-actions { display: flex; gap: 0.5rem; }
+    .btn-table { background: transparent; border: 1px solid var(--border-light); color: var(--muted); border-radius: var(--radius-sm); padding: 0.35rem 0.75rem; font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all var(--transition); }
+    .btn-table:hover { color: var(--white); border-color: var(--white); }
+    .btn-table.danger:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* MODAL VER DETALLE */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(4px); z-index: 500;
+      display: none; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg); width: 100%; max-width: 520px;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border-bottom: 1px solid var(--border); }
+    .modal-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; text-transform: uppercase; color: var(--white); }
+    .modal-close { background: none; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; line-height: 1; transition: color var(--transition); }
+    .modal-close:hover { color: var(--white); }
+    .modal-body { padding: 1.5rem; }
+
+    /* DETALLE USUARIO */
+    .detail-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #ff7043);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+      color: var(--white); margin: 0 auto 1rem auto;
+    }
+    .detail-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: var(--white); text-align: center; margin-bottom: 0.25rem; }
+    .detail-email { font-size: 0.85rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .detail-field { display: flex; flex-direction: column; gap: 0.3rem; }
+    .detail-label { font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    .detail-value { font-size: 0.9rem; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; }
+    .detail-field.full { grid-column: 1 / -1; }
+
+    /* CONFIRM DELETE */
+    .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index: 600; display: none; align-items: center; justify-content: center; }
+    .confirm-overlay.open { display: flex; }
+    .confirm-box { background: var(--surface); border: 1px solid var(--accent); border-radius: var(--radius-lg); padding: 2rem; max-width: 380px; text-align: center; }
+    .confirm-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .confirm-title { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: var(--white); margin-bottom: 0.5rem; }
+    .confirm-text { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .confirm-actions { display: flex; gap: 0.75rem; justify-content: center; }
+
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .admin-main { margin-left: 0; padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="../../index.html" class="navbar-logo">Sport<span>+</span> <span style="font-size:0.7rem;color:var(--muted);margin-left:0.5rem;letter-spacing:0.15em;">ADMIN</span></a>
+  <div class="navbar-actions">
+    <span id="admin-nombre" style="font-size:0.85rem;color:var(--muted);"></span>
+    <button class="btn btn-ghost" onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+</nav>
+
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <span class="sidebar-label">Panel</span>
+    <a href="dashboard.html" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
+    <span class="sidebar-label">Gestión</span>
+    <a href="productos.html" class="sidebar-link"><span class="icon">👟</span> Productos</a>
+    <a href="pedidos.html" class="sidebar-link"><span class="icon">📦</span> Pedidos</a>
+    <a href="usuarios.html" class="sidebar-link active"><span class="icon">👥</span> Usuarios</a>
+    <div class="sidebar-bottom">
+      <a href="../../index.html" class="sidebar-link"><span class="icon">🏠</span> Ver tienda</a>
+      <a href="#" class="sidebar-link" onclick="cerrarSesion()"><span class="icon">🚪</span> Salir</a>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO -->
+  <main class="admin-main">
+
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-eyebrow"><div class="page-eyebrow-line"></div><span>Gestión</span></div>
+        <h1 class="page-title">Usuarios</h1>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input class="search-input" type="text" id="buscador" placeholder="Buscar usuario…" oninput="filtrarUsuarios()" />
+    </div>
+
+    <div class="admin-card">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>DNI</th>
+            <th>Teléfono</th>
+            <th>Población</th>
+            <th>Provincia</th>
+            <th>Rol</th>
+            <th>Fecha alta</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-usuarios">
+          <tr><td colspan="8" style="color:var(--muted);text-align:center;padding:2rem;">Cargando usuarios…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL VER DETALLE -->
+<div class="modal-overlay" id="modal-usuario">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Detalle usuario</span>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-avatar" id="detail-avatar">-</div>
+      <div class="detail-name" id="detail-nombre">-</div>
+      <div class="detail-email" id="detail-email">-</div>
+      <div class="detail-grid">
+        <div class="detail-field">
+          <span class="detail-label">Apellido</span>
+          <span class="detail-value" id="detail-apellido">-</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">DNI</span>
+          <span class="detail-value" id="detail-dni">-</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Teléfono</span>
+          <span class="detail-value" id="detail-telefono">-</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Código Postal</span>
+          <span class="detail-value" id="detail-cp">-</span>
+        </div>
+        <div class="detail-field full">
+          <span class="detail-label">Dirección</span>
+          <span class="detail-value" id="detail-direccion">-</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Población</span>
+          <span class="detail-value" id="detail-poblacion">-</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Provincia</span>
+          <span class="detail-value" id="detail-provincia">-</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Rol</span>
+          <span class="detail-value" id="detail-rol">-</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Fecha de alta</span>
+          <span class="detail-value" id="detail-fecha">-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM ELIMINAR -->
+<div class="confirm-overlay" id="confirm-delete">
+  <div class="confirm-box">
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">Eliminar usuario</div>
+    <div class="confirm-text">Esta acción no se puede deshacer. ¿Seguro que quieres eliminar este usuario?</div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="cerrarConfirm()">Cancelar</button>
+      <button class="btn btn-primary" id="btn-confirm-delete">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/config.js"></script>
+<script src="../../js/utils.js"></script>
+<script src="../../js/auth.js"></script>
+<script>
+  // Protección — solo ADMIN
+  if (!localStorage.getItem('token') || localStorage.getItem('rol') !== 'ADMIN') {
+    window.location.href = '../../index.html';
+  }
+
+  const nombre = localStorage.getItem('nombre');
+  if (nombre) document.getElementById('admin-nombre').textContent = nombre;
+
+  const HEADERS = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
+  };
+
+  let usuarios = [];
+
+  // ——— CARGAR USUARIOS ———
+  async function cargarUsuarios() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/usuarios`, { headers: HEADERS });
+      const data = await res.json();
+      usuarios = Array.isArray(data) ? data : data.usuarios || [];
+      renderTabla(usuarios);
+    } catch (err) {
+      console.error('Error cargando usuarios:', err);
+      document.getElementById('tabla-usuarios').innerHTML =
+        '<tr><td colspan="8" style="color:var(--accent);text-align:center;padding:2rem;">⚠ Error al conectar con la API</td></tr>';
+    }
+  }
+
+  function getRolBadge(rol) {
+    if (!rol) return '<span class="rol-badge rol-cliente">Cliente</span>';
+    const nombre = (rol.nombre_rol || rol.nombre || '').toUpperCase();
+    if (nombre === 'ADMIN') return '<span class="rol-badge rol-admin">Admin</span>';
+    return '<span class="rol-badge rol-cliente">Cliente</span>';
+  }
+
+  function renderTabla(lista) {
+    const tbody = document.getElementById('tabla-usuarios');
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:2rem;">No hay usuarios registrados</td></tr>';
+      return;
+    }
+    tbody.innerHTML = lista.map(u => {
+      const inicial = (u.nombre || u.login || 'U').charAt(0).toUpperCase();
+      const nombreCompleto = [u.nombre, u.apellido].filter(Boolean).join(' ') || '—';
+      const fecha = u.fecha_alta ? new Date(u.fecha_alta).toLocaleDateString('es-ES') : '—';
+      return `
+        <tr>
+          <td>
+            <div class="user-info">
+              <div class="user-avatar">${inicial}</div>
+              <div>
+                <div class="user-name">${nombreCompleto}</div>
+                <div class="user-email">${u.login || '—'}</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--muted);font-size:0.85rem;">${u.dni || '—'}</td>
+          <td>${u.telefono || '—'}</td>
+          <td>${u.poblacion || '—'}</td>
+          <td>${u.provincia || '—'}</td>
+          <td>${getRolBadge(u.rol)}</td>
+          <td style="color:var(--muted);font-size:0.85rem;">${fecha}</td>
+          <td>
+            <div class="table-actions">
+              <button class="btn-table" onclick="verDetalle(${u.id})">Ver</button>
+              <button class="btn-table danger" onclick="confirmarEliminar(${u.id})">Eliminar</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function filtrarUsuarios() {
+    const q = document.getElementById('buscador').value.toLowerCase();
+    renderTabla(usuarios.filter(u =>
+      (u.nombre || '').toLowerCase().includes(q) ||
+      (u.apellido || '').toLowerCase().includes(q) ||
+      (u.login || '').toLowerCase().includes(q) ||
+      (u.dni || '').toLowerCase().includes(q)
+    ));
+  }
+
+  // ——— VER DETALLE ———
+  function verDetalle(id) {
+    const u = usuarios.find(x => x.id == id);
+    if (!u) return;
+    const inicial = (u.nombre || u.login || 'U').charAt(0).toUpperCase();
+    document.getElementById('detail-avatar').textContent = inicial;
+    document.getElementById('detail-nombre').textContent = [u.nombre, u.apellido].filter(Boolean).join(' ') || '—';
+    document.getElementById('detail-email').textContent = u.login || '—';
+    document.getElementById('detail-apellido').textContent = u.apellido || '—';
+    document.getElementById('detail-dni').textContent = u.dni || '—';
+    document.getElementById('detail-telefono').textContent = u.telefono || '—';
+    document.getElementById('detail-cp').textContent = u.codigo_postal || '—';
+    document.getElementById('detail-direccion').textContent = u.direccion || '—';
+    document.getElementById('detail-poblacion').textContent = u.poblacion || '—';
+    document.getElementById('detail-provincia').textContent = u.provincia || '—';
+    document.getElementById('detail-rol').textContent = u.rol ? (u.rol.nombre_rol || u.rol.nombre || '—') : '—';
+    document.getElementById('detail-fecha').textContent = u.fecha_alta ? new Date(u.fecha_alta).toLocaleDateString('es-ES') : '—';
+    document.getElementById('modal-usuario').classList.add('open');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modal-usuario').classList.remove('open');
+  }
+
+  // ——— ELIMINAR ———
+  function confirmarEliminar(id) {
+    document.getElementById('confirm-delete').classList.add('open');
+    document.getElementById('btn-confirm-delete').onclick = () => eliminarUsuario(id);
+  }
+
+  function cerrarConfirm() {
+    document.getElementById('confirm-delete').classList.remove('open');
+  }
+
+  async function eliminarUsuario(id) {
+    cerrarConfirm();
+    try {
+      const res = await fetch(`${API_BASE_URL}/usuarios/${id}`, { method: 'DELETE', headers: HEADERS });
+      if (res.ok) cargarUsuarios();
+      else console.error('Error al eliminar usuario');
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  }
+
+  function cerrarSesion() {
+    localStorage.clear();
+    window.location.href = '../../index.html';
+  }
+
+  cargarUsuarios();
+</script>
+</body>
+</html>

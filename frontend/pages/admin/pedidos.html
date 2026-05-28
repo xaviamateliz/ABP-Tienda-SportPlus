@@ -6,136 +6,194 @@
   <title>Pedidos Admin — Sport Plus</title>
   <link rel="stylesheet" href="../../css/main.css" />
   <style>
+    body { background: var(--bg); }
     .admin-layout { display: flex; min-height: 100vh; padding-top: 72px; }
-
-    /* SIDEBAR */
-    .admin-sidebar { width: 240px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); position: fixed; top: 72px; left: 0; bottom: 0; display: flex; flex-direction: column; padding: 2rem 0; z-index: 100; }
-    .sidebar-label { font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-2); padding: 0 1.5rem; margin-bottom: 0.5rem; margin-top: 1.5rem; }
+    .admin-sidebar {
+      width: 240px; flex-shrink: 0; background: var(--surface);
+      border-right: 1px solid var(--border);
+      position: fixed; top: 72px; left: 0; bottom: 0;
+      display: flex; flex-direction: column; padding: 2rem 0; z-index: 100;
+    }
+    .sidebar-label {
+      font-family: var(--font-display); font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-2);
+      padding: 0 1.5rem; margin-bottom: 0.5rem; margin-top: 1.5rem;
+    }
     .sidebar-label:first-child { margin-top: 0; }
-    .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); transition: all var(--transition); border-left: 3px solid transparent; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem;
+      font-family: var(--font-display); font-size: 0.95rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+      transition: all var(--transition); border-left: 3px solid transparent;
+      text-decoration: none; cursor: pointer;
+    }
     .sidebar-link:hover { color: var(--white); background: var(--surface-2); }
     .sidebar-link.active { color: var(--white); border-left-color: var(--accent); background: var(--surface-2); }
     .sidebar-link .icon { font-size: 1.1rem; width: 20px; text-align: center; }
     .sidebar-bottom { margin-top: auto; padding: 1rem 0; border-top: 1px solid var(--border); }
-
-    /* MAIN */
     .admin-main { margin-left: 240px; flex: 1; padding: 2.5rem; }
 
-    .page-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; gap: 1rem; flex-wrap: wrap; }
-    .page-eyebrow { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
-    .page-eyebrow-line { width: 24px; height: 2px; background: var(--accent); }
-    .page-eyebrow span { font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+    .page-header { margin-bottom: 2.5rem; }
     .page-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; text-transform: uppercase; color: var(--white); line-height: 1; }
+    .page-subtitle { font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem; }
 
     /* FILTROS */
-    .toolbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .search-input { background: var(--surface); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.65rem 1rem; font-family: var(--font-body); font-size: 0.9rem; color: var(--text); outline: none; width: 240px; transition: border-color var(--transition); }
-    .search-input:focus { border-color: var(--accent); }
-    .search-input::placeholder { color: var(--muted-2); }
-    .filter-btn { background: var(--surface); border: 1px solid var(--border-light); color: var(--muted); border-radius: var(--radius-sm); padding: 0.65rem 1rem; font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all var(--transition); }
-    .filter-btn:hover, .filter-btn.active { color: var(--white); border-color: var(--white); }
-    .filter-btn.active-accent { color: var(--accent); border-color: var(--accent); }
+    .filtros-bar {
+      display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;
+    }
+    .filtro-btn {
+      font-family: var(--font-display); font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.5rem 1.2rem; border-radius: 100px;
+      border: 1px solid var(--border-light); background: transparent; color: var(--muted);
+      cursor: pointer; transition: all var(--transition);
+    }
+    .filtro-btn:hover, .filtro-btn.active { background: var(--accent); border-color: var(--accent); color: var(--white); }
+    .filtro-btn.todos.active { background: var(--white); border-color: var(--white); color: #000; }
+
+    .search-box {
+      display: flex; align-items: center;
+      background: var(--surface); border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm); overflow: hidden; margin-left: auto;
+    }
+    .search-box input {
+      background: transparent; border: none; outline: none;
+      padding: 0.55rem 1rem; font-family: var(--font-body); font-size: 0.85rem;
+      color: var(--text); width: 220px;
+    }
+    .search-box input::placeholder { color: var(--muted-2); }
 
     /* TABLA */
     .admin-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
     .admin-table { width: 100%; border-collapse: collapse; }
-    .admin-table th { font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 0.75rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+    .admin-table th {
+      font-family: var(--font-display); font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+      padding: 0.75rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border);
+    }
     .admin-table td { padding: 1rem 1.5rem; font-size: 0.9rem; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
     .admin-table tr:last-child td { border-bottom: none; }
-    .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .admin-table tr:hover td { background: var(--surface-2); }
+    .admin-table tr { cursor: pointer; }
 
-    .status-badge { display: inline-block; padding: 0.2rem 0.6rem; font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: var(--radius-sm); }
-    .status-pendiente { background: rgba(255,193,7,0.15); color: #ffc107; }
-    .status-enviado   { background: rgba(68,255,136,0.1); color: #44ff88; }
-    .status-cancelado { background: rgba(255,61,0,0.15); color: var(--accent); }
-    .status-entregado { background: rgba(100,149,237,0.15); color: cornflowerblue; }
-
-    .btn-table { background: transparent; border: 1px solid var(--border-light); color: var(--muted); border-radius: var(--radius-sm); padding: 0.35rem 0.75rem; font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all var(--transition); }
-    .btn-table:hover { color: var(--white); border-color: var(--white); }
+    .status-badge {
+      display: inline-block; padding: 0.2rem 0.7rem;
+      font-family: var(--font-display); font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; border-radius: 100px;
+    }
+    .status-pendiente  { background: rgba(255,193,7,0.15);  color: #ffc107; }
+    .status-enviado    { background: rgba(68,255,136,0.1);  color: #44ff88; }
+    .status-cancelado  { background: rgba(255,61,0,0.15);   color: var(--accent); }
+    .status-entregado  { background: rgba(100,149,237,0.15);color: cornflowerblue; }
+    .status-procesando { background: rgba(180,100,255,0.15);color: #b464ff; }
 
     /* MODAL DETALLE */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index: 500; display: none; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+      display: none; align-items: center; justify-content: center;
+      z-index: 500; backdrop-filter: blur(4px);
+    }
     .modal-overlay.open { display: flex; }
-    .modal { background: var(--surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border-bottom: 1px solid var(--border); }
-    .modal-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; text-transform: uppercase; color: var(--white); }
-    .modal-close { background: none; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; transition: color var(--transition); }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem; width: 100%;
+      max-width: 600px; max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .modal-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; text-transform: uppercase; color: var(--white); }
+    .modal-close { background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
     .modal-close:hover { color: var(--white); }
-    .modal-body { padding: 1.5rem; }
-    .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; padding: 1.25rem 1.5rem; border-top: 1px solid var(--border); }
 
-    .detail-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-    .detail-row:last-child { border-bottom: none; }
-    .detail-label { color: var(--muted); }
-    .detail-value { color: var(--white); font-weight: 500; }
+    .detalle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .detalle-field label { font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.3rem; }
+    .detalle-field p { font-size: 0.95rem; color: var(--white); }
 
-    .estado-select { background: var(--surface-2); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-family: var(--font-body); font-size: 0.9rem; color: var(--text); outline: none; cursor: pointer; }
-    .estado-select:focus { border-color: var(--accent); }
+    .lineas-title { font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; border-top: 1px solid var(--border); padding-top: 1.25rem; }
+    .linea-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .linea-item:last-child { border-bottom: none; }
+
+    .estado-selector { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 1.5rem; }
+    .estado-selector label { font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .estado-selector select {
+      background: var(--surface-2); border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm); padding: 0.75rem 1rem;
+      font-family: var(--font-body); font-size: 0.95rem; color: var(--text);
+      outline: none; width: 100%;
+    }
+    .estado-selector select:focus { border-color: var(--accent); }
+
+    .modal-footer { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; }
+    .loading-row td { color: var(--muted); text-align: center; padding: 3rem; }
+
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .admin-main { margin-left: 0; padding: 1.5rem; }
+      .detalle-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar">
-  <a href="../../index.html" class="navbar-logo">Sport<span>+</span> <span style="font-size:0.7rem;color:var(--muted);margin-left:0.5rem;letter-spacing:0.15em;">ADMIN</span></a>
+  <a href="../../index.html" class="navbar-logo">
+    Sport<span>+</span>
+    <span style="font-size:0.65rem;color:var(--muted);margin-left:0.75rem;font-family:var(--font-body);font-weight:400;letter-spacing:0.2em;">ADMIN</span>
+  </a>
   <div class="navbar-actions">
-    <span id="admin-nombre" style="font-size:0.85rem;color:var(--muted);"></span>
-    <button class="btn btn-ghost" onclick="logout()">Cerrar sesión</button>
+    <span id="admin-nombre" style="font-size:0.85rem;color:var(--muted);margin-right:0.5rem;"></span>
+    <button class="btn btn-ghost" onclick="cerrarSesion()">Cerrar sesión</button>
   </div>
 </nav>
 
 <div class="admin-layout">
-
-  <!-- SIDEBAR -->
   <aside class="admin-sidebar">
     <span class="sidebar-label">Panel</span>
     <a href="dashboard.html" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
     <span class="sidebar-label">Gestión</span>
     <a href="productos.html" class="sidebar-link"><span class="icon">👟</span> Productos</a>
     <a href="pedidos.html" class="sidebar-link active"><span class="icon">📦</span> Pedidos</a>
+    <a href="usuarios.html" class="sidebar-link"><span class="icon">👥</span> Usuarios</a>
     <div class="sidebar-bottom">
       <a href="../../index.html" class="sidebar-link"><span class="icon">🏠</span> Ver tienda</a>
-      <a href="#" class="sidebar-link" onclick="logout()"><span class="icon">🚪</span> Salir</a>
+      <a href="#" class="sidebar-link" onclick="cerrarSesion()"><span class="icon">🚪</span> Salir</a>
     </div>
   </aside>
 
-  <!-- CONTENIDO -->
   <main class="admin-main">
-
     <div class="page-header">
-      <div>
-        <div class="page-eyebrow"><div class="page-eyebrow-line"></div><span>Gestión</span></div>
-        <h1 class="page-title">Pedidos</h1>
-      </div>
+      <h1 class="page-title">Pedidos</h1>
+      <p class="page-subtitle" id="num-pedidos">Cargando…</p>
     </div>
 
-    <div class="toolbar">
-      <input class="search-input" type="text" id="buscador" placeholder="Buscar por cliente o #pedido…" oninput="filtrarPedidos()" />
-      <button class="filter-btn active" id="filtro-todos" onclick="setFiltro('todos')">Todos</button>
-      <button class="filter-btn" id="filtro-PENDIENTE" onclick="setFiltro('PENDIENTE')">Pendientes</button>
-      <button class="filter-btn" id="filtro-ENVIADO" onclick="setFiltro('ENVIADO')">Enviados</button>
-      <button class="filter-btn" id="filtro-ENTREGADO" onclick="setFiltro('ENTREGADO')">Entregados</button>
-      <button class="filter-btn" id="filtro-CANCELADO" onclick="setFiltro('CANCELADO')">Cancelados</button>
+    <!-- FILTROS POR ESTADO -->
+    <div class="filtros-bar">
+      <button class="filtro-btn todos active" onclick="filtrarEstado('todos', this)">Todos</button>
+      <button class="filtro-btn" onclick="filtrarEstado('pendiente', this)">⏳ Pendiente</button>
+      <button class="filtro-btn" onclick="filtrarEstado('procesando', this)">🔄 Procesando</button>
+      <button class="filtro-btn" onclick="filtrarEstado('enviado', this)">🚚 Enviado</button>
+      <button class="filtro-btn" onclick="filtrarEstado('entregado', this)">✅ Entregado</button>
+      <button class="filtro-btn" onclick="filtrarEstado('cancelado', this)">❌ Cancelado</button>
+      <div class="search-box">
+        <input type="text" id="buscador" placeholder="🔍 Buscar por ID o usuario…" oninput="buscarPedidos()">
+      </div>
     </div>
 
     <div class="admin-card">
       <table class="admin-table">
         <thead>
           <tr>
-            <th>#Pedido</th>
-            <th>Cliente</th>
+            <th>#ID</th>
+            <th>Usuario ID</th>
+            <th>Productos</th>
             <th>Fecha</th>
-            <th>Total</th>
             <th>Estado</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody id="tabla-pedidos">
-          <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem;">Cargando pedidos…</td></tr>
+          <tr class="loading-row"><td colspan="6">⏳ Cargando pedidos…</td></tr>
         </tbody>
       </table>
     </div>
-
   </main>
 </div>
 
@@ -144,20 +202,48 @@
   <div class="modal">
     <div class="modal-header">
       <span class="modal-title" id="modal-titulo">Pedido #—</span>
-      <button class="modal-close" onclick="cerrarModal()">✕</button>
+      <button class="modal-close" onclick="cerrarModal()">×</button>
     </div>
-    <div class="modal-body">
-      <div id="detalle-contenido"></div>
-      <div style="margin-top:1.5rem;">
-        <label class="form-label" style="display:block;margin-bottom:0.5rem;">Cambiar estado</label>
-        <select class="estado-select" id="nuevo-estado">
-          <option value="PENDIENTE">Pendiente</option>
-          <option value="ENVIADO">Enviado</option>
-          <option value="ENTREGADO">Entregado</option>
-          <option value="CANCELADO">Cancelado</option>
-        </select>
+
+    <div class="detalle-grid">
+      <div class="detalle-field">
+        <label>ID Pedido</label>
+        <p id="det-id">—</p>
+      </div>
+      <div class="detalle-field">
+        <label>Usuario</label>
+        <p id="det-usuario">—</p>
+      </div>
+      <div class="detalle-field">
+        <label>Fecha</label>
+        <p id="det-fecha">—</p>
+      </div>
+      <div class="detalle-field">
+        <label>Total</label>
+        <p id="det-total">—</p>
+      </div>
+      <div class="detalle-field">
+        <label>Estado actual</label>
+        <p id="det-estado">—</p>
       </div>
     </div>
+
+    <p class="lineas-title">Productos del pedido</p>
+    <div id="det-lineas">—</div>
+
+    <!-- CAMBIAR ESTADO -->
+    <div class="estado-selector">
+      <label>Cambiar estado</label>
+      <select id="sel-estado">
+        <option value="pendiente">⏳ Pendiente</option>
+        <option value="procesando">🔄 Procesando</option>
+        <option value="enviado">🚚 Enviado</option>
+        <option value="entregado">✅ Entregado</option>
+        <option value="cancelado">❌ Cancelado</option>
+      </select>
+    </div>
+
+    <div id="modal-msg" class="msg" style="margin-top:1rem;"></div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="cerrarModal()">Cerrar</button>
       <button class="btn btn-primary" onclick="actualizarEstado()">Guardar estado</button>
@@ -169,113 +255,174 @@
 <script src="../../js/utils.js"></script>
 <script src="../../js/auth.js"></script>
 <script>
-  // Protección de ruta
-  const rol = localStorage.getItem('rol');
-  if (!rol || rol !== 'ADMIN') window.location.href = '../../index.html';
+  if (!localStorage.getItem('token') || localStorage.getItem('rol') !== 'ADMIN') {
+    window.location.href = '../../index.html';
+  }
 
   const nombre = localStorage.getItem('nombre');
   if (nombre) document.getElementById('admin-nombre').textContent = nombre;
 
-  let pedidos = [];
-  let filtroActual = 'todos';
-  let pedidoSeleccionado = null;
+  const HEADERS = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
+  };
 
+  let todosPedidos = [];
+  let pedidoActualId = null;
+  let filtroActivo = 'todos';
+
+  function getBadge(estado) {
+    const e = (estado || '').toLowerCase();
+    const map = { 'pendiente':'pendiente','enviado':'enviado','entregado':'entregado','cancelado':'cancelado','procesando':'procesando' };
+    return `<span class="status-badge status-${map[e]||'pendiente'}">${estado||'—'}</span>`;
+  }
+
+  // ——— CARGAR PEDIDOS ———
   async function cargarPedidos() {
-    if (MOCK_MODE) {
-      pedidos = [
-        { id: 1041, cliente: 'Carlos Martínez', email: 'carlos@mail.com', fecha: '2026-05-20', total: 89.90, estado: 'PENDIENTE', productos: ['Zapatillas Running Pro x1'] },
-        { id: 1040, cliente: 'Laura García', email: 'laura@mail.com', fecha: '2026-05-19', total: 124.00, estado: 'ENVIADO', productos: ['Camiseta Técnica x2', 'Mochila Trail x1'] },
-        { id: 1039, cliente: 'Marc Puig', email: 'marc@mail.com', fecha: '2026-05-18', total: 45.50, estado: 'ENTREGADO', productos: ['Calcetines Pro x3'] },
-        { id: 1038, cliente: 'Sara Vidal', email: 'sara@mail.com', fecha: '2026-05-17', total: 210.00, estado: 'CANCELADO', productos: ['Zapatillas Trail x1', 'Chaqueta Técnica x1'] },
-        { id: 1037, cliente: 'Pau Ferrer', email: 'pau@mail.com', fecha: '2026-05-16', total: 67.00, estado: 'PENDIENTE', productos: ['Pantalón Running x1'] },
-      ];
-      renderTabla();
-      return;
-    }
     try {
-      const res = await fetch(`${API_BASE_URL}/pedidos`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        pedidos = Array.isArray(data) ? data : data.pedidos || [];
-        renderTabla();
-      }
-    } catch (err) { console.error('Error cargando pedidos:', err); }
+      const res = await fetch(`${API_BASE_URL}/pedidos`, { headers: HEADERS });
+      const data = await res.json();
+      todosPedidos = Array.isArray(data) ? data : data.pedidos || [];
+      document.getElementById('num-pedidos').textContent = `${todosPedidos.length} pedidos en total`;
+      renderTabla(todosPedidos);
+    } catch (err) {
+      console.error(err);
+      document.getElementById('tabla-pedidos').innerHTML =
+        '<tr class="loading-row"><td colspan="6">⚠ Error al cargar pedidos</td></tr>';
+    }
   }
 
-  function renderTabla() {
+  // ——— RENDERIZAR ———
+  function renderTabla(pedidos) {
+    if (pedidos.length === 0) {
+      document.getElementById('tabla-pedidos').innerHTML =
+        '<tr class="loading-row"><td colspan="6">No hay pedidos con este filtro</td></tr>';
+      return;
+    }
+    document.getElementById('tabla-pedidos').innerHTML = pedidos.map(p => {
+      const fecha = p.fecha ? new Date(p.fecha).toLocaleDateString('es-ES') : '—';
+      const nLineas = p.lineas ? p.lineas.length : (p.num_productos || '—');
+      const total = p.total != null ? parseFloat(p.total).toFixed(2) + '€' : '—';
+      const usuario = p.email || p.usuario_email || p.usuario || p.usuario_id || '—';
+      return `
+        <tr onclick="abrirDetalle(${p.id})">
+          <td><strong>#${p.id}</strong></td>
+          <td>${usuario}</td>
+          <td>${nLineas} producto(s)</td>
+          <td><strong>${total}</strong></td>
+          <td>${fecha}</td>
+          <td>${getBadge(p.estado)}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  // ——— FILTRAR POR ESTADO ———
+  function filtrarEstado(estado, btn) {
+    filtroActivo = estado;
+    document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    aplicarFiltros();
+  }
+
+  function buscarPedidos() { aplicarFiltros(); }
+
+  function aplicarFiltros() {
     const q = document.getElementById('buscador').value.toLowerCase();
-    let lista = pedidos;
-    if (filtroActual !== 'todos') lista = lista.filter(p => p.estado === filtroActual);
-    if (q) lista = lista.filter(p => p.cliente?.toLowerCase().includes(q) || String(p.id).includes(q));
-
-    const tbody = document.getElementById('tabla-pedidos');
-    if (!lista.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem;">No hay pedidos</td></tr>';
-      return;
+    let resultado = [...todosPedidos];
+    if (filtroActivo !== 'todos') {
+      resultado = resultado.filter(p => (p.estado||'').toLowerCase() === filtroActivo);
     }
-    tbody.innerHTML = lista.map(p => `
-      <tr>
-        <td><strong>#${p.id}</strong></td>
-        <td>${p.cliente || p.usuario || '—'}</td>
-        <td style="color:var(--muted)">${p.fecha || '—'}</td>
-        <td><strong>${parseFloat(p.total || 0).toFixed(2)}€</strong></td>
-        <td><span class="status-badge status-${(p.estado||'').toLowerCase()}">${p.estado || '—'}</span></td>
-        <td><button class="btn-table" onclick="verDetalle(${p.id})">Ver detalle</button></td>
-      </tr>
-    `).join('');
+    if (q) {
+      resultado = resultado.filter(p =>
+        String(p.id).includes(q) ||
+        String(p.usuario_id || p.usuario || '').toLowerCase().includes(q)
+      );
+    }
+    renderTabla(resultado);
   }
 
-  function filtrarPedidos() { renderTabla(); }
-
-  function setFiltro(f) {
-    filtroActual = f;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(`filtro-${f}`)?.classList.add('active');
-    renderTabla();
-  }
-
-  function verDetalle(id) {
-    pedidoSeleccionado = pedidos.find(p => p.id == id);
-    if (!pedidoSeleccionado) return;
-    const p = pedidoSeleccionado;
-    document.getElementById('modal-titulo').textContent = `Pedido #${p.id}`;
-    document.getElementById('nuevo-estado').value = p.estado || 'PENDIENTE';
-    document.getElementById('detalle-contenido').innerHTML = `
-      <div class="detail-row"><span class="detail-label">Cliente</span><span class="detail-value">${p.cliente || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${p.email || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Fecha</span><span class="detail-value">${p.fecha || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Total</span><span class="detail-value">${parseFloat(p.total||0).toFixed(2)}€</span></div>
-      <div class="detail-row"><span class="detail-label">Estado actual</span><span class="detail-value"><span class="status-badge status-${(p.estado||'').toLowerCase()}">${p.estado||'—'}</span></span></div>
-      ${p.productos ? `<div class="detail-row" style="flex-direction:column;gap:0.5rem;"><span class="detail-label">Productos</span><div>${Array.isArray(p.productos) ? p.productos.map(x=>`<div style="color:var(--text);font-size:0.85rem;padding:0.2rem 0;">• ${x}</div>`).join('') : p.productos}</div></div>` : ''}
-    `;
+  // ——— ABRIR DETALLE ———
+  async function abrirDetalle(id) {
+    pedidoActualId = id;
+    document.getElementById('modal-titulo').textContent = `Pedido #${id}`;
+    document.getElementById('modal-msg').style.display = 'none';
     document.getElementById('modal-pedido').classList.add('open');
-  }
-
-  function cerrarModal() { document.getElementById('modal-pedido').classList.remove('open'); }
-
-  async function actualizarEstado() {
-    if (!pedidoSeleccionado) return;
-    const nuevoEstado = document.getElementById('nuevo-estado').value;
-
-    if (MOCK_MODE) {
-      const idx = pedidos.findIndex(p => p.id == pedidoSeleccionado.id);
-      if (idx !== -1) pedidos[idx].estado = nuevoEstado;
-      cerrarModal();
-      renderTabla();
-      return;
-    }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/pedidos/${pedidoSeleccionado.id}`, {
+      const res = await fetch(`${API_BASE_URL}/pedidos/${id}`, { headers: HEADERS });
+      const p = await res.json();
+
+      document.getElementById('det-id').textContent = `#${p.id}`;
+      document.getElementById('det-usuario').textContent = p.email || p.usuario_email || p.usuario || p.usuario_id || '—';
+      document.getElementById('det-fecha').textContent = p.fecha ? new Date(p.fecha).toLocaleDateString('es-ES') : '—';
+      document.getElementById('det-total').textContent = p.total != null ? parseFloat(p.total).toFixed(2) + '€' : '—';
+      document.getElementById('det-estado').innerHTML = getBadge(p.estado);
+      document.getElementById('sel-estado').value = (p.estado || 'pendiente').toLowerCase();
+
+      // Líneas del pedido
+      const lineas = p.lineas || p.productos || [];
+      if (lineas.length > 0) {
+        document.getElementById('det-lineas').innerHTML = lineas.map(l => `
+          <div class="linea-item">
+            <span>${l.nombre || l.producto || `Producto #${l.producto_id}`}</span>
+            <span style="color:var(--muted)">x${l.cantidad || 1}</span>
+            <span><strong>${l.precio ? parseFloat(l.precio).toFixed(2)+'€' : '—'}</strong></span>
+          </div>`).join('');
+      } else {
+        document.getElementById('det-lineas').innerHTML =
+          '<p style="color:var(--muted);font-size:0.9rem;">Sin líneas de detalle</p>';
+      }
+    } catch (err) {
+      document.getElementById('det-lineas').innerHTML =
+        '<p style="color:var(--accent);">Error al cargar detalle</p>';
+    }
+  }
+
+  // ——— ACTUALIZAR ESTADO ———
+  async function actualizarEstado() {
+    const nuevoEstado = document.getElementById('sel-estado').value;
+    const msgEl = document.getElementById('modal-msg');
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/pedidos/${pedidoActualId}`, {
         method: 'PUT',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' },
+        headers: HEADERS,
         body: JSON.stringify({ estado: nuevoEstado })
       });
-      if (res.ok) { cerrarModal(); cargarPedidos(); }
-    } catch (err) { console.error('Error actualizando estado:', err); }
+
+      if (res.ok) {
+        msgEl.textContent = '✓ Estado actualizado correctamente';
+        msgEl.className = 'msg msg-success';
+        msgEl.style.display = 'block';
+        // Actualizar en la lista local
+        const idx = todosPedidos.findIndex(p => p.id === pedidoActualId);
+        if (idx !== -1) todosPedidos[idx].estado = nuevoEstado;
+        aplicarFiltros();
+        document.getElementById('det-estado').innerHTML = getBadge(nuevoEstado);
+        setTimeout(() => { msgEl.style.display = 'none'; }, 2000);
+      } else {
+        const err = await res.json();
+        msgEl.textContent = err.error || 'Error al actualizar estado.';
+        msgEl.className = 'msg msg-error';
+        msgEl.style.display = 'block';
+      }
+    } catch (err) {
+      msgEl.textContent = 'Error de conexión.';
+      msgEl.className = 'msg msg-error';
+      msgEl.style.display = 'block';
+    }
   }
+
+  function cerrarModal() {
+    document.getElementById('modal-pedido').classList.remove('open');
+    pedidoActualId = null;
+  }
+
+  function cerrarSesion() { localStorage.clear(); window.location.href = '../../index.html'; }
+
+  document.getElementById('modal-pedido').addEventListener('click', function(e) {
+    if (e.target === this) cerrarModal();
+  });
 
   cargarPedidos();
 </script>
