@@ -313,6 +313,9 @@
       const dni      = document.getElementById('perf-dni').value.trim();
 
       if (!nombre) { lanzarNotificacion('El nombre es obligatorio.', 'error'); return; }
+      if (!apellido)  { lanzarNotificacion('El apellido es obligatorio.', 'error'); return; }
+      if (!telefono)  { lanzarNotificacion('El telefono es obligatorio.', 'error'); return; }
+      if (!dni)         { lanzarNotificacion('El DNI es obligatorio.', 'error'); return; }
 
       try {
         const res = await fetch(`${API_BASE_URL}/usuarios/${usuario_id}`, {
